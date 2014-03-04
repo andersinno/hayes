@@ -1,4 +1,5 @@
 # -- encoding: UTF-8 --
+from hayes.search.internal import _Ranges
 from hayes.utils import object_to_dict
 
 
@@ -35,3 +36,7 @@ class AndFilter(_CompoundFilter):
 
 class OrFilter(_CompoundFilter):
 	_kind = "or"
+
+class RangeQuery(_Ranges, Filter):
+	def as_dict(self):
+		return {"range": self.ranges}

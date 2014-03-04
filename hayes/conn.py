@@ -5,7 +5,7 @@ from pprint import pprint
 
 from hayes.indexing import DocumentIndex, CompletionSuggestField
 from hayes.search import Search, SearchResults
-from hayes.search.queries import QueryStringQuery
+from hayes.search.queries import QueryStringQuery, Query
 from hayes.transport import ESSession, BadRequestError, NotFoundError
 from hayes.utils import object_to_dict
 
@@ -101,6 +101,8 @@ class Hayes(object):
 	def search(self, search, indexes=None, count=50, start=0, page=None):
 		if isinstance(search, basestring):  # This is a silly default, I suppose
 			search = Search(QueryStringQuery(search))
+		if isinstance(search, Query):
+			search = Search(query=search)
 
 		search_obj = object_to_dict(search)
 		if indexes:

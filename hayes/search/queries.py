@@ -1,5 +1,6 @@
 # -- encoding: UTF-8 --
 from hayes.search.filters import AndFilter
+from hayes.search.internal import _Ranges
 from hayes.utils import object_to_dict
 
 
@@ -7,14 +8,14 @@ class Query(object):
 	pass
 
 
-class QueryStringQuery(object):
+class QueryStringQuery(Query):
 	def __init__(self, query):
 		self.query = query
 
 	def as_dict(self):
 		return {"query_string": {"query": unicode(self.query)}}
 
-class MatchQuery(object):
+class MatchQuery(Query):
 	def __init__(self, field, value, operator="and"):
 		self.field = field
 		self.value = value
@@ -28,7 +29,7 @@ class MatchQuery(object):
 		elif self.operator == "phrase_prefix":
 			return {"match": ({self.field: {"query": unicode(self.value), "type": "phrase_prefix"}})}
 
-class BoolQuery(object):
+class BoolQuery(Query):
 	def __init__(self, must=None, must_not=None, should=None, boost=1.0, minimum_should_match=None):
 		self.must = must
 		self.must_not = must_not
@@ -47,31 +48,12 @@ class BoolQuery(object):
 		out = dict((k, v) for (k, v) in out.iteritems() if v is not None)
 		return {"bool": out}
 
-class RangeQuery(object):
-	def __init__(self):
-		self.ranges = {}
-
-	def add_range(self, field, gte=None, gt=None, lte=None, lt=None, boost=1.0):
-		out = {}
-		if gte:
-			out["gte"] = gte
-		elif gt:
-			out["gt"] = gt
-
-		if lte:
-			out["lte"] = lte
-		elif lt:
-			out["lt"] = lt
-
-		if out:
-			out["boost"] = float(boost)
-			self.ranges[field] = out
-
+class RangeQuery(_Ranges, Query):
 	def as_dict(self):
 		return {"range": self.ranges}
 
 
-class FilteredQuery(object):
+class FilteredQuery(Query):
 	def __init__(self, query, filter):
 		self.query = query
 		if isinstance(filter, (tuple, list)):
@@ -85,3 +67,20 @@ class FilteredQuery(object):
 				"filter": object_to_dict(self.filter)
 			}
 		}
+
+class ConstantScoreQuery(Query):
+	def __init__(self, filter):
+		if isinstance(filter, (tuple, list)):
+			filter = AndFilter(filters=list(filter))
+		self.filter = filter
+
+	def as_dict(self):
+		return {
+			"constant_score": {
+				"filter": object_to_dict(self.filter)
+			}
+		}
+
+class MatchAllQuery(Query):
+	def as_dict(self):
+		return {"match_all": {}}
