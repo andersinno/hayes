@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Search</title>
+</head>
+<body>
+<form method="get">
+	<table>
+		{{ form.as_table }}
+
+		<tr><td><input type="submit" value="Search"></td></tr>
+		<tr>
+			<td></td>
+			<td><div id="suggests"></div></td>
+		</tr>
+	</table>
+</form>
+<hr/>
+{% if results %}
+	<h2>Total {{ results.total }} results, {{ results.took }} ms</h2>
+	{% for type, hits in results.by_type.items %}
+		<h3>{{ type }}</h3>
+		<ul>
+			{% for res in hits %}
+			<li>
+				<ul>
+				{% for key, value in res.items %}
+				<li>{{ key }}: {{ value }}</li>
+				{% endfor %}
+				</ul>
+			</li>
+			{% endfor %}
+		</ul>
+	{% endfor %}
+{% endif %}
+
+<script>
+
+
+function suggest(value) {
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', location.href.split("?")[0] + "?complete=" + encodeURIComponent(value));
+	xhr.onload = function() {
+		var data = JSON.parse(this.responseText);
+		var html = "<ul>";
+		data.forEach(function(option) {
+			html += '<li><a href="' + option.payload.url + '">' + option.text + '</li>\n';
+		});
+		html += "</ul>";
+		document.getElementById("suggests").innerHTML = html;
+	};
+	xhr.send();
+}
+
+document.getElementById("id_q").addEventListener("input", function(){suggest(this.value);}, false);
+</script>
+
+</body>
+</html>
