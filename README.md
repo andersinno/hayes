@@ -1,7 +1,7 @@
 Hayes
 =====
 
-Simpler Elasticsearch for Django (using Haystack indexing).
+Simpler Elasticsearch for Django.
 
 Very much a work in progress.
 
@@ -9,8 +9,6 @@ May contain hot buttered soul.
 
 Usage Example
 -------------
-
-Assuming you have indexed the Django User model using Haystack:
 
 ```
 from hayes import Hayes

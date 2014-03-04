@@ -1,2 +1,5 @@
-pyes == 0.90.1
-haystack >= 2.0
+Coffin>=0.3,<0.4
+Django>=1.6,<1.7
+fake-factory>=0.3,<0.4
+Jinja2>=2.6,<2.7
+requests>=1.0
