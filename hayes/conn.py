@@ -1,86 +1,32 @@
 # -- encoding: UTF-8 --
 from itertools import islice
-import json
-import datetime
 import logging
-import requests
-from requests.exceptions import HTTPError
+from pprint import pprint
+
 from hayes.indexing import DocumentIndex, CompletionSuggestField
+from hayes.search import Search, SearchResults
+from hayes.search.queries import QueryStringQuery
+from hayes.transport import ESSession, BadRequestError, NotFoundError
+from hayes.utils import object_to_dict
 
 
-def to_dict(obj, keys=None):
-	out = {}
+class CompletionSuggestionResults(object):
+	def __init__(self, index, raw_result):
+		self.index = index
+		self.raw_result = raw_result
+		self.options = raw_result.get("options") or ()
 
-	if isinstance(obj, dict):
-		if not keys:
-			return obj
-		src = obj
-	else:
-		src = vars(obj)
-
-	return dict((k, v) for (k, v) in src.iteritems() if ((not keys or k in keys) and not k.startswith("__") and not callable(v)))
-
-
-def json_encode(object):
-	if isinstance(object, datetime.datetime):
-		return object.isoformat()
-	else:
-		raise ValueError("Can't encode %r" % object)
-
-
-class NotFoundError(HTTPError):
-	pass
-
-
-class BadRequestError(HTTPError):
-	pass
-
-class ForbiddenError(HTTPError):
-	pass
-
-
-class ESSession(requests.Session):
-	def __init__(self, base_url):
-		super(ESSession, self).__init__()
-		self.base_url = base_url
-
-	def request(self, method, url, **kwargs):
-		if url.startswith("/"):
-			url = self.base_url + url
-		data = kwargs.pop("data", None)
-		if data and isinstance(data, dict):
-			data = json.dumps(data, default=json_encode)
-
-		kwargs.update(method=method, url=url, data=data)
-
-		resp = super(ESSession, self).request(**kwargs)
-		if resp.status_code == 404:
-			raise NotFoundError(resp.json()["error"], response=resp)
-		elif resp.status_code == 400:
-			raise BadRequestError(resp.json()["error"], response=resp)
-		elif resp.status_code == 403:
-			raise ForbiddenError(resp.json()["error"], response=resp)
-		resp.raise_for_status()
-		return resp
-
-	def bulk(self, method, url, data, **kwargs):
-		batch = []
-		for command, payload in data:
-			batch.append(command)
-			batch.append(payload)
-		data = "\n".join(json.dumps(obj, default=json_encode) for obj in batch) + "\n"
-		return self.request(method, url, data=data, **kwargs)
 
 class Hayes(object):
-	def __init__(self, server, default_index):
+	def __init__(self, server, index):
 		self.log = logging.getLogger("Hayes")
 		if not server.startswith("http://"):
 			server = "http://%s/" % server
 		self.session = ESSession(base_url=server)
-		self.default_index = default_index
+		self.index = index
 
 	def index_objects(self, index, objects_iterable, bulk_size):
-		coll_name = index.index or self.default_index
+		coll_name = self.index
 		doctype = index.name
 		keys = set(index.fields)
 		keys.update(("id", "_id"))
@@ -88,7 +34,7 @@ class Hayes(object):
 		n = 0
 		if not bulk_size or bulk_size <= 0:
 			for obj in objects_iterable:
-				obj = to_dict(obj, keys=keys)
+				obj = object_to_dict(obj, keys=keys)
 				id = obj.pop("_id", None) or obj.pop("id", None)
 				if id is not None:
 					self.session.put("/%s/%s/%s" % (coll_name, doctype, id), data=obj)
@@ -99,7 +45,7 @@ class Hayes(object):
 			while True:
 				batch = []
 				for obj in islice(objects_iterable, 0, bulk_size):
-					obj = to_dict(obj, keys=keys)
+					obj = object_to_dict(obj, keys=keys)
 					id = obj.pop("_id", None) or obj.pop("id", None)
 					if id is not None:
 						batch.append(({"index": {"_id": id}}, obj))
@@ -114,7 +60,7 @@ class Hayes(object):
 
 	def rebuild_index(self, index, bulk_size=0, delete_first=True):
 		assert isinstance(index, DocumentIndex)
-		coll_name = index.index or self.default_index
+		coll_name = self.index
 		doctype = index.name
 
 		settings = index.get_settings_fragment()
@@ -137,8 +83,7 @@ class Hayes(object):
 		return self.index_objects(index, index.get_objects(), bulk_size=bulk_size)
 
 	def completion_suggest(self, index, text, fuzzy=None):
-
-		coll_name = index.index or self.default_index
+		coll_name = self.index
 		doctype = index.name
 		key = "%s-sugg" % doctype
 
@@ -149,4 +94,26 @@ class Hayes(object):
 		sugg_doc = {"text": text, "completion": {"field": completion_suggest_field_name}}
 		if fuzzy:
 			sugg_doc["completion"]["fuzzy"] = {"unicode_aware": True}
-		return self.session.post("/%s/_suggest" % (coll_name), data={key: sugg_doc}).json()
+
+		data = self.session.post("/%s/_suggest" % (coll_name), data={key: sugg_doc}).json()
+		return CompletionSuggestionResults(index, data[key][0])
+
+	def search(self, search, indexes=None, count=50, start=0, page=None):
+		if isinstance(search, basestring):  # This is a silly default, I suppose
+			search = Search(QueryStringQuery(search))
+
+		search_obj = object_to_dict(search)
+		if indexes:
+			url = "/%s/%s/_search" % (self.index, ",".join(i.name for i in indexes))
+		else:
+			url = "/%s/_search" % (self.index)
+
+		search_obj["from"] = int(start)
+		search_obj["size"] = int(count)
+		if page is not None:
+			search_obj["from"] = search_obj["size"] * page
+
+		pprint(search_obj)
+
+		data = self.session.get(url, data=search_obj).json()
+		return SearchResults(search=search, raw_result=data, start=start, count=count)

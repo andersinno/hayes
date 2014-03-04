@@ -3,12 +3,14 @@ from hayes.analysis import Analyzer, builtin_simple_analyzer
 
 
 class DocumentIndex(object):
-	index = None
 	name = None
 	fields = {}
 	enable_source = True
 	enable_size = False
 	enable_timestamp = False
+
+	def get_model(self):  # For Django compat.
+		return None
 
 	def get_objects(self):
 		return ()
