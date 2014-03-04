@@ -24,3 +24,4 @@ parts
 pip-log.txt
 sdist
 var
+*.sqlite3
