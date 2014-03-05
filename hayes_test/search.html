@@ -15,23 +15,23 @@
 			<td><div id="suggests"></div></td>
 		</tr>
 	</table>
+	<style>em { background: greenyellow }</style>
 </form>
 <hr/>
 {% if results %}
 	<h2>Total {{ results.total }} results, {{ results.took }} ms</h2>
 	{% for type, hits in results.by_type.items %}
 		<h3>{{ type }}</h3>
-		<ul>
-			{% for res in hits %}
-			<li>
-				<ul>
-				{% for key, value in res.items %}
-				<li>{{ key }}: {{ value }}</li>
-				{% endfor %}
-				</ul>
-			</li>
-			{% endfor %}
-		</ul>
+		{% for res in hits %}
+		<h4>Raw result</h4>
+		<ul>{% for key, value in res.items %}<li>{{ key }}: {{ value }}</li>{% endfor %}</ul>
+		{% if res.highlight %}
+			<h5>Highlights</h5>
+			<ul>
+				{% for key, value in res.highlight.items %}<li>{{ key }}: {{ value.0|safe }}</li>{% endfor %}
+			</ul>
+		{% endif %}
+		{% endfor %}
 	{% endfor %}
 {% endif %}
 

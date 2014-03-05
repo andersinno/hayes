@@ -8,4 +8,5 @@ class Command(BaseCommand):
 		conn = get_connection()
 		for index in get_configured_indexes():
 			print "Working on index", index.name
-			conn.rebuild_index(index, bulk_size=300)
+			conn.rebuild_index(index)
+			conn.index_objects(index, index.get_objects(), bulk_size=300)

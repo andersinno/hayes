@@ -1,7 +1,6 @@
 # -- encoding: UTF-8 --
 from itertools import islice
 import logging
-from pprint import pprint
 
 from hayes.indexing import DocumentIndex, CompletionSuggestField
 from hayes.search import Search, SearchResults
@@ -58,7 +57,7 @@ class Hayes(object):
 				n += len(resp.get("items") or ())
 		return n
 
-	def rebuild_index(self, index, bulk_size=0, delete_first=True):
+	def rebuild_index(self, index, delete_first=True):
 		assert isinstance(index, DocumentIndex)
 		coll_name = self.index
 		doctype = index.name
@@ -77,10 +76,8 @@ class Hayes(object):
 				self.log.info("Mapping %s deleted." % doctype)
 			except NotFoundError:
 				pass
-		self.session.put("/%s/%s/_mapping" % (coll_name, doctype), data={"properties": index.get_mapping()})
+		self.session.put("/%s/%s/_mapping" % (coll_name, doctype), data=index.get_mapping())
 
-
-		return self.index_objects(index, index.get_objects(), bulk_size=bulk_size)
 
 	def completion_suggest(self, index, text, fuzzy=None):
 		coll_name = self.index
@@ -115,7 +112,7 @@ class Hayes(object):
 		if page is not None:
 			search_obj["from"] = search_obj["size"] * page
 
-		pprint(search_obj)
+		print search_obj
 
 		data = self.session.get(url, data=search_obj).json()
 		return SearchResults(search=search, raw_result=data, start=start, count=count)

@@ -1,5 +1,6 @@
 # -- encoding: UTF-8 --
 from hayes.analysis import Analyzer, builtin_simple_analyzer
+from hayes.utils import object_to_dict
 
 
 class DocumentIndex(object):
@@ -23,9 +24,14 @@ class DocumentIndex(object):
 		if self.enable_size:
 			mapping_json["_timestamp"] = {"enabled": True, "store": True, "type": "date"}
 
+		properties = mapping_json["properties"] = {}
+
 		for field_name, field in self.fields.iteritems():
 			assert isinstance(field, SearchField)
-			mapping_json[field_name] = m = field.as_dict()
+			if field_name == "_all":
+				mapping_json["_all"] = object_to_dict(field)
+			else:
+				properties[field_name] = object_to_dict(field)
 
 		return mapping_json
 
@@ -88,9 +94,12 @@ class StringField(SearchField):
 
 
 class TextField(StringField):
-	def __init__(self, analyzer=None, boost=1.0):
+	def __init__(self, analyzer=None, boost=1.0, term_vector="no"):
 		super(TextField, self).__init__(boost=boost)
 		self.analyzer = analyzer
+		self.term_vector = term_vector
+		if self.term_vector not in ("no", "yes", "with_offsets", "with_positions", "with_positions_offsets"):
+			raise ValueError("What a strange 'term_vector' value")
 
 	def as_dict(self):
 		val = {
@@ -98,6 +107,7 @@ class TextField(StringField):
 			"index": ("analyzed" if self.indexed else "none"),
 			"store": self.stored,
 		    "boost": self.boost,
+		    "term_vector": self.term_vector
 		}
 		if self.analyzer:
 			val["analyzer"] = self.analyzer.name

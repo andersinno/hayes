@@ -24,11 +24,15 @@ def get_configured_indexes():
 		_indexes_cache = list(_get_configured_indexes())
 	return _indexes_cache
 
+
 def get_index_by_name(name):
 	for index in get_configured_indexes():
 		if index.name == name:
 			return index
 
 
-def get_connection():
-	return Hayes(server=settings.HAYES_SERVER, index=settings.HAYES_DEFAULT_INDEX)
+def get_connection(**kwargs):
+	kwargs.setdefault("connection_class", Hayes)
+	kwargs.setdefault("server", settings.HAYES_SERVER)
+	kwargs.setdefault("index", settings.HAYES_DEFAULT_INDEX)
+	return (kwargs.pop("connection_class"))(**kwargs)

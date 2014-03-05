@@ -1,16 +1,20 @@
 # -- encoding: UTF-8 --
 from collections import defaultdict
-from hayes.search.queries import FilteredQuery
+from hayes.search.highlight import HighlightSpec, HighlightFieldSpec
+from hayes.search.queries import FilteredQuery, QueryStringQuery
 from hayes.utils import object_to_dict
 
 
 class Search(object):
-	def __init__(self, query, filter=None, fields=None, sort=None):
+	def __init__(self, query, filter=None, fields=None, sort=None, highlight=None):
 		# XXX: facets?
+		if isinstance(query, basestring):
+			query = QueryStringQuery(query)
 		self.query = query
 		self.filter = filter
 		self.fields = fields
 		self.sort = sort
+		self.highlight = highlight
 
 	def to_dict(self):
 		res = {}
@@ -27,6 +31,13 @@ class Search(object):
 
 		if self.sort:
 			res['sort'] = self.sort
+
+		if self.highlight:
+			if isinstance(self.highlight, (tuple, list, set)):
+				highlight = HighlightSpec(fields=dict((field, HighlightFieldSpec()) for field in self.highlight))
+			else:
+				highlight = self.highlight
+			res["highlight"] = object_to_dict(highlight)
 
 		return res
 

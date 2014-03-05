@@ -60,15 +60,20 @@ class PageIndex(DocumentIndex):
 	    "title": TextField(fi_analyzer, boost=2),
 	    "abstract": TextField(fi_analyzer),
 	    "url": StringField(),
+	    "_all": TextField(fi_analyzer),
 	}
 
 	def get_model(self):
 		return Page
 
+	def get_object(self, page):
+		doc = {"_id": page.pk, "title": page.title, "url": page.url, "abstract": page.abstract}
+		doc["suggest"] = {"input": doc["title"], "output": doc["title"], "payload": {"url": doc["url"]}}
+		return doc
+
 	def get_objects(self):
 		for page in Page.objects.iterator():
-			doc = {"_id": page.pk, "title": page.title, "url": page.url, "abstract": page.abstract}
-			doc["suggest"] = {"input": doc["title"], "output": doc["title"], "payload": {"url": doc["url"]}}
+			doc = self.get_object(page)
 			yield doc
 
 

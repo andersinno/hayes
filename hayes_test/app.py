@@ -6,8 +6,9 @@ from django import forms
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from hayes.django_interop import get_connection, get_index_by_name
-from hayes.search import Search
+from hayes.search import Search, highlight
 from hayes.search.filters import PrefixFilter
+from hayes.search.highlight import HighlightSpec
 from hayes.search.queries import QueryStringQuery, BoolQuery, RangeQuery, MatchAllQuery, MatchQuery
 
 
@@ -50,7 +51,7 @@ class SearchView(TemplateView):
 				))
 
 			else:
-				context["results"] = conn.search(query)
+				context["results"] = conn.search(Search(query, highlight=("abstract",)))
 
 		return context
 
