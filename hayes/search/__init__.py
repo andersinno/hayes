@@ -72,3 +72,6 @@ class SearchResults(object):
 		for hit in self.hits:
 			self.by_type[hit.get("_type")].append(hit)
 		self.by_type = dict(self.by_type.iteritems())
+
+	def __iter__(self):
+		return iter(self.hits)

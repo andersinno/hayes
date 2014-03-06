@@ -15,6 +15,7 @@ class QueryStringQuery(Query):
 	def as_dict(self):
 		return {"query_string": {"query": unicode(self.query)}}
 
+
 class MatchQuery(Query):
 	def __init__(self, field, value, operator="and"):
 		self.field = field
@@ -28,6 +29,7 @@ class MatchQuery(Query):
 			return {"match": ({self.field: {"query": unicode(self.value), "type": "phrase"}})}
 		elif self.operator == "phrase_prefix":
 			return {"match": ({self.field: {"query": unicode(self.value), "type": "phrase_prefix"}})}
+
 
 class BoolQuery(Query):
 	def __init__(self, must=None, must_not=None, should=None, boost=1.0, minimum_should_match=None):
@@ -47,6 +49,7 @@ class BoolQuery(Query):
 		}
 		out = dict((k, v) for (k, v) in out.iteritems() if v is not None)
 		return {"bool": out}
+
 
 class RangeQuery(_Ranges, Query):
 	def as_dict(self):
@@ -68,6 +71,7 @@ class FilteredQuery(Query):
 			}
 		}
 
+
 class ConstantScoreQuery(Query):
 	def __init__(self, filter):
 		if isinstance(filter, (tuple, list)):
@@ -81,6 +85,17 @@ class ConstantScoreQuery(Query):
 			}
 		}
 
+
 class MatchAllQuery(Query):
 	def as_dict(self):
 		return {"match_all": {}}
+
+
+class PrefixQuery(Query):
+	def __init__(self, field, value, boost=1.0):
+		self.field = field
+		self.value = value
+		self.boost = boost
+
+	def as_dict(self):
+		return {"prefix": {(self.field): {"value": self.value, "boost": float(self.boost)}}}

@@ -22,10 +22,10 @@ class Hayes(object):
 		if not server.startswith("http://"):
 			server = "http://%s/" % server
 		self.session = ESSession(base_url=server)
-		self.index = index
+		self.default_coll_name = index
 
-	def index_objects(self, index, objects_iterable, bulk_size):
-		coll_name = self.index
+	def index_objects(self, index, objects_iterable, bulk_size, coll_name=None):
+		coll_name = coll_name or self.default_coll_name
 		doctype = index.name
 		keys = set(index.fields)
 		keys.update(("id", "_id"))
@@ -57,9 +57,9 @@ class Hayes(object):
 				n += len(resp.get("items") or ())
 		return n
 
-	def rebuild_index(self, index, delete_first=True):
+	def rebuild_index(self, index, delete_first=True, coll_name=None):
 		assert isinstance(index, DocumentIndex)
-		coll_name = self.index
+		coll_name = coll_name or self.default_coll_name
 		doctype = index.name
 
 		settings = index.get_settings_fragment()
@@ -79,8 +79,8 @@ class Hayes(object):
 		self.session.put("/%s/%s/_mapping" % (coll_name, doctype), data=index.get_mapping())
 
 
-	def completion_suggest(self, index, text, fuzzy=None):
-		coll_name = self.index
+	def completion_suggest(self, index, text, fuzzy=None, coll_name=None):
+		coll_name = coll_name or self.default_coll_name
 		doctype = index.name
 		key = "%s-sugg" % doctype
 
@@ -95,7 +95,9 @@ class Hayes(object):
 		data = self.session.post("/%s/_suggest" % (coll_name), data={key: sugg_doc}).json()
 		return CompletionSuggestionResults(index, data[key][0])
 
-	def search(self, search, indexes=None, count=50, start=0, page=None):
+	def search(self, search, indexes=None, count=50, start=0, page=None, coll_name=None):
+		coll_name = coll_name or self.default_coll_name
+
 		if isinstance(search, basestring):  # This is a silly default, I suppose
 			search = Search(QueryStringQuery(search))
 		if isinstance(search, Query):
@@ -103,16 +105,23 @@ class Hayes(object):
 
 		search_obj = object_to_dict(search)
 		if indexes:
-			url = "/%s/%s/_search" % (self.index, ",".join(i.name for i in indexes))
+			url = "/%s/%s/_search" % (coll_name, ",".join(i.name for i in indexes))
 		else:
-			url = "/%s/_search" % (self.index)
+			url = "/%s/_search" % (coll_name)
 
 		search_obj["from"] = int(start)
 		search_obj["size"] = int(count)
 		if page is not None:
 			search_obj["from"] = search_obj["size"] * page
 
-		print search_obj
-
 		data = self.session.get(url, data=search_obj).json()
 		return SearchResults(search=search, raw_result=data, start=start, count=count)
+
+	def search_iter(self, search, indexes=None, count=50, start=0, coll_name=None):
+		while True:
+			res = self.search(search=search, indexes=indexes, count=count, start=start, coll_name=coll_name)
+			if not res.hits:
+				break
+			for hit in res.hits:
+				yield hit
+			start += count
