@@ -13,5 +13,5 @@ class Command(BaseCommand):
 		wg = WordGatherer(conn, "word-suggest")
 		wg.reset()
 		wg.update(index, ("abstract", "title"), tokenizer=smart_finnish_tokenizer)
-		#for x in wg.search("juna"):
-		#	print x
+		for x in wg.search("juna"):
+			print x

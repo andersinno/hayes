@@ -1,11 +1,12 @@
 # -- encoding: UTF-8 --
 import unicodedata
+from hayes.analysis import builtin_simple_analyzer
 from hayes.ext.stopwords import finnish_stopwords, unicode_punctuation_chars
-from hayes.indexing import DocumentIndex, StringField, IntegerField
+from hayes.indexing import DocumentIndex, StringField, IntegerField, TextField
 import hashlib
 from hayes.search import Search
 from hayes.search.queries import MatchAllQuery, PrefixQuery, BoolQuery
-from collections import deque, Counter
+from collections import deque, Counter, defaultdict
 import re
 
 
@@ -31,7 +32,7 @@ class WordGatherer(object):
 		self.index = index = DocumentIndex()
 		index.name = self.target_type
 		index.fields = {
-			"word": StringField(),
+			"word": TextField(analyzer=builtin_simple_analyzer),
 			"count": IntegerField(),
 		}
 
@@ -66,15 +67,20 @@ class WordGatherer(object):
 		:param tokenizer: Tokenizer callable. Should split unicode to words
 		:param cutoff: Ignore words with less than this many occurrences.
 		"""
+		counts_by_uid = defaultdict(lambda:Counter())
 		for word, count in self._gather_words(index, fields, tokenizer=tokenizer).iteritems():
+			uid = hashlib.sha1(unicodedata.normalize("NFKD", word.lower()).encode("UTF-8")).hexdigest()
+			counts_by_uid[uid][word] += count
+
+		for uid, word_to_count in counts_by_uid.iteritems():
+			word = word_to_count.most_common(1)[0][0]
+			count = sum(word_to_count.itervalues())
 			if count <= cutoff:
 				continue
-			uid = hashlib.sha1(unicodedata.normalize("NFKD", word.lower()).encode("UTF-8")).hexdigest()
-			doc = {"word": word, "count": count}
 			self.connection.session.post("/%s/%s/%s/_update" % (self.target_coll_name, self.target_type, uid), data={
 				"script" : "ctx._source.count += count",
 				"params" : {"count" : count},
-				"upsert" : doc
+				"upsert" : {"word": word, "count": count}
 			})
 
 	def search(self, word, limit=30):
