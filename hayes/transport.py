@@ -8,6 +8,8 @@ from requests.exceptions import HTTPError
 def json_encode(object):
 	if isinstance(object, datetime.datetime):
 		return object.isoformat()
+	elif isinstance(object, datetime.date):
+		return object.isoformat()
 	else:
 		raise ValueError("Can't encode %r" % object)
 

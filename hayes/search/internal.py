@@ -17,5 +17,6 @@ class _Ranges(object):
 			out["lt"] = lt
 
 		if out:
-			out["boost"] = float(boost)
+			if boost is not None:
+				out["boost"] = float(boost)
 			self.ranges[field] = out

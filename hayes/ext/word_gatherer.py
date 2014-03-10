@@ -1,25 +1,37 @@
 # -- encoding: UTF-8 --
 import unicodedata
-from hayes.analysis import builtin_simple_analyzer
-from hayes.ext.stopwords import finnish_stopwords, unicode_punctuation_chars
-from hayes.indexing import DocumentIndex, StringField, IntegerField, TextField
 import hashlib
-from hayes.search import Search
-from hayes.search.queries import MatchAllQuery, PrefixQuery, BoolQuery
-from collections import deque, Counter, defaultdict
-import re
+from collections import Counter, defaultdict
 
+from hayes.analysis import builtin_simple_analyzer
+from hayes.ext.stopwords import finnish_stopwords, unicode_punctuation_chars, swedish_stopwords, russian_stopwords, english_stopwords
+from hayes.indexing import DocumentIndex, IntegerField, TextField
+from hayes.search import Search
+from hayes.search.queries import MatchAllQuery, PrefixQuery
 
 
 def default_tokenizer(content):
 	return content.split()
 
-def smart_finnish_tokenizer(content):
+def smart_tokenizer(content, stopwords=()):
 	words = unicode(content).split()
 	words = [word.strip(unicode_punctuation_chars) for word in words]
-	words = [word for word in words if len(word) > 3 and word.lower() not in finnish_stopwords]
+	words = [word for word in words if len(word) > 3 and word.lower() not in stopwords]
 	words = [word for word in words if not word.isdigit()]  # Filter out full numbers
 	return words
+
+def smart_finnish_tokenizer(content):
+	return smart_tokenizer(content, stopwords=finnish_stopwords)
+
+def smart_swedish_tokenizer(content):
+	return smart_tokenizer(content, stopwords=swedish_stopwords)
+
+def smart_russian_tokenizer(content):
+	return smart_tokenizer(content, stopwords=russian_stopwords)
+
+def smart_english_tokenizer(content):
+	return smart_tokenizer(content, stopwords=english_stopwords)
+
 
 class WordGatherer(object):
 	def __init__(self, connection, target_type, coll_name=None):
