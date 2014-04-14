@@ -1,9 +1,10 @@
+# coding=utf-8
 from setuptools import setup
 
 setup(
     name='hayes',
-    version='0.0.1',
-    packages=['hayes'],
+    version='0.0.3',
+    packages=['hayes', 'hayes.analysis', 'hayes.ext', 'hayes.django_interop'],
     license='MIT',
     long_description="n/a",
     maintainer="Aarni Koskela",
