@@ -31,7 +31,7 @@ def generate_date_tail_boost_queries(field, timedeltas_and_boosts, relative_to=N
 	for timedelta, boost in timedeltas_and_boosts.iteritems():
 		date = (relative_to - timedelta).date()
 		times[date] = boost
-	times = sorted(times.iteritems(), key=lambda i:i[0])
+	times = sorted(times.iteritems(), key=lambda i: i[0])
 	queries = []
 
 	for x in xrange(len(times)):

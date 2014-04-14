@@ -1,5 +1,5 @@
 # -- encoding: UTF-8 --
-from hayes.analysis import Analyzer, builtin_simple_analyzer
+from hayes.analysis import AnalysisBase, builtin_simple_analyzer
 from hayes.utils import object_to_dict
 
 
@@ -27,10 +27,10 @@ class DocumentIndex(object):
 		properties = mapping_json["properties"] = {}
 
 		for field_name, field in self.fields.iteritems():
-			assert isinstance(field, SearchField)
 			if field_name == "_all":
 				mapping_json["_all"] = object_to_dict(field)
 			else:
+				assert isinstance(field, SearchField)
 				properties[field_name] = object_to_dict(field)
 
 		return mapping_json
@@ -40,13 +40,14 @@ class DocumentIndex(object):
 		tokenizers_by_name = {}
 		filters_by_name = {}
 		for field in self.fields.itervalues():
-			for analyzer in field.get_analyzers():
-				if analyzer and isinstance(analyzer, Analyzer):
-					analyzers_by_name[analyzer.name] = analyzer
-					filters_by_name.update((f.name, f) for f in getattr(analyzer, "filters", ()))
-					tokenizer = getattr(analyzer, "tokenizer", None)
-					if tokenizer:
-						tokenizers_by_name[tokenizer.name] = tokenizer
+			if hasattr(field, "get_analyzers"):  # It could be a dict too
+				for analyzer in field.get_analyzers():
+					if analyzer and isinstance(analyzer, AnalysisBase):
+						analyzers_by_name[analyzer.name] = analyzer
+						filters_by_name.update((f.name, f) for f in getattr(analyzer, "filters", ()) if hasattr(f, "name"))
+						tokenizer = getattr(analyzer, "tokenizer", None)
+						if getattr(tokenizer, "name", None):
+							tokenizers_by_name[tokenizer.name] = tokenizer
 
 		def to_dict_m(m):
 			out = {}
@@ -57,9 +58,9 @@ class DocumentIndex(object):
 			return out
 
 		return {
-		"analyzer": to_dict_m(analyzers_by_name),
-		"tokenizer": to_dict_m(tokenizers_by_name),
-		"filter": to_dict_m(filters_by_name),
+			"analyzer": to_dict_m(analyzers_by_name),
+			"tokenizer": to_dict_m(tokenizers_by_name),
+			"filter": to_dict_m(filters_by_name),
 		}
 
 	def get_settings_fragment(self):
@@ -106,8 +107,8 @@ class TextField(StringField):
 			"type": "string",
 			"index": ("analyzed" if self.indexed else "none"),
 			"store": self.stored,
-		    "boost": self.boost,
-		    "term_vector": self.term_vector
+			"boost": self.boost,
+			"term_vector": self.term_vector
 		}
 		if self.analyzer:
 			val["analyzer"] = self.analyzer.name
@@ -149,6 +150,6 @@ class CompletionSuggestField(SearchField):
 			"type": "completion",
 			"payloads": self.payloads,
 			"preserve_separators": self.preserve_separators,
-		    "index_analyzer": self.index_analyzer.name,
-		    "search_analyzer": self.search_analyzer.name,
+			"index_analyzer": self.index_analyzer.name,
+			"search_analyzer": self.search_analyzer.name,
 		}

@@ -64,11 +64,14 @@ class Hayes(object):
 
 		settings = index.get_settings_fragment()
 		try:
-			self.session.put("/%s/" % coll_name, data=settings)  # Create the collection
-		except BadRequestError:  # Already existed, thus close, update settings, reopen (bleeeh)
-			self.session.post("/%s/_close" % coll_name)
-			self.session.put("/%s/_settings" % coll_name, data=settings)
-			self.session.post("/%s/_open" % coll_name)
+			resp = self.session.put("/%s/" % coll_name, data=settings)  # Create the collection
+		except BadRequestError, exc:
+			if "IndexAlreadyExistsException" in exc.message:  #  Already existed, thus close, update settings, reopen (bleeeh)
+				self.session.post("/%s/_close" % coll_name)
+				self.session.put("/%s/_settings" % coll_name, data=settings)
+				self.session.post("/%s/_open" % coll_name)
+			else:
+				raise  # We didn't expect _this_ exception
 
 		if delete_first:
 			try:

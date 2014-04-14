@@ -52,6 +52,12 @@ class SearchResult(dict):
 		if fields:
 			self.update(fields)
 
+	def get_highlights(self):
+		out = []
+		for field, highlights in sorted(self.get("highlight", {}).iteritems()):
+			out.extend(highlights)
+		return out
+
 
 class SearchResults(object):
 	def __init__(self, search, raw_result, start, count):

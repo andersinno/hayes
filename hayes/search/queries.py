@@ -31,20 +31,24 @@ class QueryStringQuery(Query):
 
 
 class MatchQuery(Query):
-	def __init__(self, field, value, operator=None):
+	def __init__(self, field, value, operator=None, fuzziness=None):
 		self.field = field
 		self.value = value
 		self.operator = operator
+		self.fuzziness = fuzziness
 
 	def as_dict(self):
+		query_frag = {self.field: {"query": unicode(self.value)}}
 		if self.operator is None:
-			return {"match": ({self.field: unicode(self.value)})}
-		elif self.operator in ("or", "and"):
-			return {"match": ({self.field: {"query": unicode(self.value), "operator": self.operator}})}
-		elif self.operator == "phrase":
-			return {"match": ({self.field: {"query": unicode(self.value), "type": "phrase"}})}
-		elif self.operator == "phrase_prefix":
-			return {"match": ({self.field: {"query": unicode(self.value), "type": "phrase_prefix"}})}
+			return {"match": query_frag}
+		if self.operator in ("or", "and"):
+			query_frag["operator"] = self.operator
+		elif self.operator in ("phrase", "phrase_prefix"):
+			query_frag["type"] = self.operator
+		if self.fuzziness:
+			query_frag["fuzziness"] = self.fuzziness
+
+		return {"match": query_frag}
 
 
 class BoolQuery(Query):
@@ -60,8 +64,8 @@ class BoolQuery(Query):
 			"must": [object_to_dict(d) for d in self.must] if self.must else None,
 			"must_not": [object_to_dict(d) for d in self.must_not] if self.must_not else None,
 			"should": [object_to_dict(d) for d in self.should] if self.should else None,
-		    "boost": self.boost,
-		    "minimum_should_match": self.minimum_should_match
+			"boost": self.boost,
+			"minimum_should_match": self.minimum_should_match
 		}
 		return {"bool": _clean_dict(out)}
 
