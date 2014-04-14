@@ -13,6 +13,7 @@ from hayes.search.queries import MatchAllQuery, PrefixQuery
 def default_tokenizer(content):
 	return content.split()
 
+
 def smart_tokenizer(content, stopwords=()):
 	words = unicode(content).split()
 	words = [word.strip(unicode_punctuation_chars) for word in words]
@@ -20,20 +21,25 @@ def smart_tokenizer(content, stopwords=()):
 	words = [word for word in words if not word.isdigit()]  # Filter out full numbers
 	return words
 
+
 def smart_finnish_tokenizer(content):
 	return smart_tokenizer(content, stopwords=finnish_stopwords)
+
 
 def smart_swedish_tokenizer(content):
 	return smart_tokenizer(content, stopwords=swedish_stopwords)
 
+
 def smart_russian_tokenizer(content):
 	return smart_tokenizer(content, stopwords=russian_stopwords)
+
 
 def smart_english_tokenizer(content):
 	return smart_tokenizer(content, stopwords=english_stopwords)
 
 
 class WordGatherer(object):
+
 	def __init__(self, connection, target_type, coll_name=None):
 		"""
 		:type connection: hayes.conn.Hayes
@@ -79,7 +85,7 @@ class WordGatherer(object):
 		:param tokenizer: Tokenizer callable. Should split unicode to words
 		:param cutoff: Ignore words with less than this many occurrences.
 		"""
-		counts_by_uid = defaultdict(lambda:Counter())
+		counts_by_uid = defaultdict(lambda: Counter())
 		for word, count in self._gather_words(index, fields, tokenizer=tokenizer).iteritems():
 			uid = hashlib.sha1(unicodedata.normalize("NFKD", word.lower()).encode("UTF-8")).hexdigest()
 			counts_by_uid[uid][word] += count
@@ -90,9 +96,9 @@ class WordGatherer(object):
 			if count <= cutoff:
 				continue
 			self.connection.session.post("/%s/%s/%s/_update" % (self.target_coll_name, self.target_type, uid), data={
-				"script" : "ctx._source.count += count",
-				"params" : {"count" : count},
-				"upsert" : {"word": word, "count": count}
+				"script": "ctx._source.count += count",
+				"params": {"count": count},
+				"upsert": {"word": word, "count": count}
 			})
 
 	def search(self, word, limit=30):

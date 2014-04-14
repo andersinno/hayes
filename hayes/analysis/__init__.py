@@ -1,7 +1,9 @@
 # -- encoding: UTF-8 --
 
+
 class AnalysisBase(object):
 	type = None
+
 	def __init__(self, name):
 		self.name = name
 
@@ -12,12 +14,16 @@ class AnalysisBase(object):
 		d.update(extra)
 		return d
 
+
 class BuiltInAnalyzer(AnalysisBase):
+
 	def to_dict(self):
 		return None
 
+
 class CustomAnalyzer(AnalysisBase):
 	type = "custom"
+
 	def __init__(self, name, tokenizer, filters):
 		super(CustomAnalyzer, self).__init__(name=name)
 		self.tokenizer = tokenizer
@@ -30,6 +36,7 @@ class CustomAnalyzer(AnalysisBase):
 
 class StandardAnalyzer(AnalysisBase):
 	type = "standard"
+
 	def __init__(self, name, stopwords=None, max_token_length=255):
 		super(StandardAnalyzer, self).__init__(name)
 		self.stopwords = stopwords
@@ -41,8 +48,10 @@ class StandardAnalyzer(AnalysisBase):
 			max_token_length=int(self.max_token_length),
 		)
 
+
 class SimpleAnalyzer(AnalysisBase):
 	type = "simple"
+
 
 class LanguageAnalyzer(AnalysisBase):
 	KNOWN_LANGUAGES = ("arabic", "armenian", "basque", "brazilian", "bulgarian", "catalan", "chinese", "cjk", "czech", "danish", "dutch", "english", "finnish", "french", "galician", "german", "greek", "hindi", "hungarian", "indonesian", "italian", "norwegian", "persian", "portuguese", "romanian", "russian", "spanish", "swedish", "turkish", "thai")
@@ -52,6 +61,7 @@ class LanguageAnalyzer(AnalysisBase):
 		if language not in self.KNOWN_LANGUAGES:
 			raise ValueError("Don't know about %r" % language)
 		self.type = language
+
 
 class SnowballAnalyzer(AnalysisBase):
 	type = "snowball"
@@ -67,6 +77,7 @@ class SnowballAnalyzer(AnalysisBase):
 		return super(SnowballAnalyzer, self).to_dict(language=self.language, **extra)
 
 ####
+
 
 class StopFilter(AnalysisBase):
 	type = "stop"
@@ -88,8 +99,6 @@ class StemmerFilter(AnalysisBase):
 
 	def to_dict(self, **extra):
 		return super(StemmerFilter, self).to_dict(name=self.stemmer_name, **extra)
-
-
 
 
 ###

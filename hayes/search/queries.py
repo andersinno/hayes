@@ -3,6 +3,7 @@ from hayes.search.filters import AndFilter
 from hayes.search.internal import _Ranges
 from hayes.utils import object_to_dict
 
+
 def _clean_dict(in_dict):
 	"""
 	Recursively remove None-valued items from dict.
@@ -18,11 +19,13 @@ def _clean_dict(in_dict):
 		out[key] = value
 	return out
 
+
 class Query(object):
 	pass
 
 
 class QueryStringQuery(Query):
+
 	def __init__(self, query):
 		self.query = query
 
@@ -31,6 +34,7 @@ class QueryStringQuery(Query):
 
 
 class MatchQuery(Query):
+
 	def __init__(self, field, value, operator=None, fuzziness=None):
 		self.field = field
 		self.value = value
@@ -52,6 +56,7 @@ class MatchQuery(Query):
 
 
 class BoolQuery(Query):
+
 	def __init__(self, must=None, must_not=None, should=None, boost=None, minimum_should_match=None):
 		self.must = must
 		self.must_not = must_not
@@ -71,11 +76,13 @@ class BoolQuery(Query):
 
 
 class RangeQuery(_Ranges, Query):
+
 	def as_dict(self):
 		return {"range": self.ranges}
 
 
 class FilteredQuery(Query):
+
 	def __init__(self, query, filter):
 		self.query = query
 		if isinstance(filter, (tuple, list)):
@@ -92,6 +99,7 @@ class FilteredQuery(Query):
 
 
 class ConstantScoreQuery(Query):
+
 	def __init__(self, filter):
 		if isinstance(filter, (tuple, list)):
 			filter = AndFilter(filters=list(filter))
@@ -106,11 +114,13 @@ class ConstantScoreQuery(Query):
 
 
 class MatchAllQuery(Query):
+
 	def as_dict(self):
 		return {"match_all": {}}
 
 
 class PrefixQuery(Query):
+
 	def __init__(self, field, value, boost=None):
 		self.field = field
 		self.value = value
@@ -119,7 +129,9 @@ class PrefixQuery(Query):
 	def as_dict(self):
 		return _clean_dict({"prefix": {(self.field): {"value": self.value, "boost": float(self.boost) if self.boost else None}}})
 
+
 class TermQuery(Query):
+
 	def __init__(self, field, value, boost=None):
 		self.field = field
 		self.value = value

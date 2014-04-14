@@ -18,9 +18,9 @@ class DocumentIndex(object):
 
 	def get_mapping(self):
 		mapping_json = {}
-		mapping_json["_source"] = {"enabled" : self.enable_source}
+		mapping_json["_source"] = {"enabled": self.enable_source}
 		if self.enable_size:
-			mapping_json["_size"] = {"enabled" : True, "store": True, "type": "int"}
+			mapping_json["_size"] = {"enabled": True, "store": True, "type": "int"}
 		if self.enable_size:
 			mapping_json["_timestamp"] = {"enabled": True, "store": True, "type": "date"}
 
@@ -87,6 +87,7 @@ class SearchField(object):
 
 
 class StringField(SearchField):
+
 	def __init__(self, boost=1.0):
 		self.boost = boost
 
@@ -95,6 +96,7 @@ class StringField(SearchField):
 
 
 class TextField(StringField):
+
 	def __init__(self, analyzer=None, boost=1.0, term_vector="no"):
 		super(TextField, self).__init__(boost=boost)
 		self.analyzer = analyzer
@@ -120,25 +122,32 @@ class BaseNumberField(SearchField):
 
 
 class IntegerField(BaseNumberField):
+
 	def as_dict(self):
 		return {"type": "integer", "store": self.stored}
 
 
 class DecimalField(BaseNumberField):
+
 	def as_dict(self):
 		return {"type": "double", "store": self.stored}
 
 
 class DateField(SearchField):
+
 	def as_dict(self):
 		return {"type": "date", "store": self.stored}
 
+
 class BooleanField(SearchField):
+
 	def as_dict(self):
 		return {"type": "boolean", "store": self.stored}
 
+
 class CompletionSuggestField(SearchField):
 	stored = False
+
 	def __init__(self, index_analyzer=builtin_simple_analyzer, search_analyzer=builtin_simple_analyzer, payloads=False, preserve_separators=True):
 		self.index_analyzer = index_analyzer
 		self.search_analyzer = search_analyzer

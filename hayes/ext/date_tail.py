@@ -11,9 +11,9 @@ def generate_date_tail_boost_queries(field, timedeltas_and_boosts, relative_to=N
 
 	```
 	queries = generate_date_tail_boost_queries("publish_date", {
-		timedelta(days=90): 1,
-		timedelta(days=30): 2,
-		timedelta(days=10): 4,
+			timedelta(days=90): 1,
+			timedelta(days=30): 2,
+			timedelta(days=10): 4,
 	})
 	s = Search(BoolQuery(must=..., should=queries))
 	# ...
@@ -41,7 +41,7 @@ def generate_date_tail_boost_queries(field, timedeltas_and_boosts, relative_to=N
 		else:
 			kwargs["gt"] = times[x][0]
 			if x < len(times) - 1:
-				kwargs["lte"] = times[x+1][0]
+				kwargs["lte"] = times[x + 1][0]
 
 		if kwargs["boost"] > 0:
 			q = RangeQuery()

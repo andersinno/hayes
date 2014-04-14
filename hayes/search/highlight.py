@@ -3,6 +3,7 @@ from hayes.utils import object_to_dict
 
 
 class _HighlightBaseSpec(object):
+
 	def __init__(self, tag_schema=None, pre_tags=None, post_tags=None, number_of_fragments=None, fragment_size=None, order=None):
 		self.tag_schema = tag_schema
 		self.pre_tags = pre_tags
@@ -27,10 +28,13 @@ class _HighlightBaseSpec(object):
 			out["order"] = self.order
 		return out
 
+
 class HighlightFieldSpec(_HighlightBaseSpec):
 	pass
 
+
 class HighlightSpec(_HighlightBaseSpec):
+
 	def __init__(self, fields=None, **kwargs):
 		super(HighlightSpec, self).__init__(**kwargs)
 		self.fields = dict(fields or {})

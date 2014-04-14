@@ -10,6 +10,7 @@ from hayes.utils import object_to_dict
 
 
 class CompletionSuggestionResults(object):
+
 	def __init__(self, index, raw_result):
 		self.index = index
 		self.raw_result = raw_result
@@ -17,6 +18,7 @@ class CompletionSuggestionResults(object):
 
 
 class Hayes(object):
+
 	def __init__(self, server, index):
 		self.log = logging.getLogger("Hayes")
 		if not server.startswith("http://"):
@@ -66,7 +68,7 @@ class Hayes(object):
 		try:
 			resp = self.session.put("/%s/" % coll_name, data=settings)  # Create the collection
 		except BadRequestError, exc:
-			if "IndexAlreadyExistsException" in exc.message:  #  Already existed, thus close, update settings, reopen (bleeeh)
+			if "IndexAlreadyExistsException" in exc.message:  # Already existed, thus close, update settings, reopen (bleeeh)
 				self.session.post("/%s/_close" % coll_name)
 				self.session.put("/%s/_settings" % coll_name, data=settings)
 				self.session.post("/%s/_open" % coll_name)
@@ -80,7 +82,6 @@ class Hayes(object):
 			except NotFoundError:
 				pass
 		self.session.put("/%s/%s/_mapping" % (coll_name, doctype), data=index.get_mapping())
-
 
 	def completion_suggest(self, index, text, fuzzy=None, coll_name=None):
 		coll_name = coll_name or self.default_coll_name

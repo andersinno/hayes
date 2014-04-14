@@ -1,6 +1,8 @@
 # -- encoding: UTF-8 --
 
+
 class _Ranges(object):
+
 	def __init__(self):
 		self.ranges = {}
 

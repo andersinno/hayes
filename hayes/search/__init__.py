@@ -6,6 +6,7 @@ from hayes.utils import object_to_dict
 
 
 class Search(object):
+
 	def __init__(self, query, filter=None, fields=None, sort=None, highlight=None):
 		# XXX: facets?
 		if isinstance(query, basestring):
@@ -43,6 +44,7 @@ class Search(object):
 
 
 class SearchResult(dict):
+
 	def __init__(self, obj):
 		source = obj.pop("_source", None)
 		fields = obj.pop("fields", None)
@@ -60,6 +62,7 @@ class SearchResult(dict):
 
 
 class SearchResults(object):
+
 	def __init__(self, search, raw_result, start, count):
 		self.search = search
 		self.raw_result = raw_result
