@@ -3,8 +3,8 @@ from setuptools import setup
 
 setup(
     name='hayes',
-    version='0.0.3',
-    packages=['hayes', 'hayes.analysis', 'hayes.ext', 'hayes.django_interop'],
+    version='0.0.3.1',
+    packages=['hayes', 'hayes.analysis', 'hayes.ext', 'hayes.django_interop', 'hayes.search'],
     license='MIT',
     long_description="n/a",
     maintainer="Aarni Koskela",
