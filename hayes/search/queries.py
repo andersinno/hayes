@@ -139,3 +139,13 @@ class TermQuery(Query):
 
 	def as_dict(self):
 		return _clean_dict({"term": {self.field: self.value, "boost": self.boost}})
+
+
+class WildcardQuery(Query):
+
+	def __init__(self, query, boost=None):
+		self.query = query
+		self.boost = boost
+
+	def as_dict(self):
+		return _clean_dict({"wildcard": {"_all": unicode(self.query), "boost": self.boost}})
