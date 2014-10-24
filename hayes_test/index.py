@@ -1,6 +1,5 @@
 # -- encoding: UTF-8 --
 import hashlib
-import json
 import random
 
 from faker import Factory

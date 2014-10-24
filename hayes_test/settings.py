@@ -1,7 +1,6 @@
 # -- encoding: UTF-8 --
 
 import os
-import sys
 
 BASE_DIR = os.path.realpath(os.path.dirname(os.path.realpath(__file__)))
 SECRET_KEY = 'ff' * 30

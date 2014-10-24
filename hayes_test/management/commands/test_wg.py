@@ -1,8 +1,7 @@
 # -- encoding: UTF-8 --
-
-# -- encoding: UTF-8 --
 from django.core.management import BaseCommand
-from hayes.django_interop import get_connection, get_configured_indexes, get_index_by_name
+
+from hayes.django_interop import get_connection, get_index_by_name
 from hayes.ext.word_gatherer import WordGatherer, smart_finnish_tokenizer
 
 
