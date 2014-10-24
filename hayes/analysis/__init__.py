@@ -76,6 +76,20 @@ class SnowballAnalyzer(AnalysisBase):
 	def to_dict(self, **extra):
 		return super(SnowballAnalyzer, self).to_dict(language=self.language, **extra)
 
+
+class NgramTokenizer(AnalysisBase):
+	type = "ngram"
+
+	def __init__(self, name, min_gram=3, max_gram=8):
+		super(NgramTokenizer, self).__init__(name)
+		self.min_gram = min_gram
+		self.max_gram = max_gram
+		self.token_chars = ["letter"]
+
+	def to_dict(self, **extra):
+		return super(NgramTokenizer, self).to_dict(min_gram=self.min_gram, max_gram=self.max_gram, token_chars=self.token_chars, **extra)
+
+
 ####
 
 
