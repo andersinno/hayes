@@ -138,7 +138,7 @@ class TermQuery(Query):
 		self.boost = boost
 
 	def as_dict(self):
-		return _clean_dict({"term": {self.field: self.value, "boost": self.boost}})
+		return _clean_dict({"term": {self.field: {"value": unicode(self.value), "boost": self.boost}}})
 
 
 class WildcardQuery(Query):
@@ -149,4 +149,4 @@ class WildcardQuery(Query):
 		self.boost = boost
 
 	def as_dict(self):
-		return _clean_dict({"wildcard": {self.field: unicode(self.value), "boost": self.boost}})
+		return _clean_dict({"wildcard": {self.field: {"value": unicode(self.value), "boost": self.boost}}})
