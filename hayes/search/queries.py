@@ -150,3 +150,27 @@ class WildcardQuery(Query):
 
 	def as_dict(self):
 		return _clean_dict({"wildcard": {self.field: {"value": unicode(self.value), "boost": self.boost}}})
+
+
+class FuzzyQuery(Query):
+
+	def __init__(self, field, value, boost=None, fuzziness=2, prefix_length=0, max_expansions=100):
+		self.field = field
+		self.value = value
+		self.boost = boost
+		self.fuzziness = fuzziness
+		self.prefix_length = prefix_length
+		self.max_expansions = max_expansions
+
+	def as_dict(self):
+		return _clean_dict({
+			"fuzzy": {
+				self.field: {
+					"value": unicode(self.value),
+					"boost": self.boost,
+					"fuzziness": self.fuzziness,
+					"prefix_length": self.prefix_length,
+					"max_expansions": self.max_expansions
+				}
+			}
+		})
