@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='hayes',
-    version='0.0.3.2',
+    version='0.0.3.3',
     packages=['hayes', 'hayes.analysis', 'hayes.ext', 'hayes.django_interop', 'hayes.search'],
     license='MIT',
     long_description="n/a",
