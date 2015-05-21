@@ -43,12 +43,13 @@ class ESSession(requests.Session):
         kwargs.update(method=method, url=url, data=data)
 
         resp = super(ESSession, self).request(**kwargs)
+        error_message = resp.json().get("error", "")
         if resp.status_code == 404:
-            raise NotFoundError(resp.json()["error"], response=resp)
+            raise NotFoundError(error_message, response=resp)
         elif resp.status_code == 400:
-            raise BadRequestError(resp.json()["error"], response=resp)
+            raise BadRequestError(error_message, response=resp)
         elif resp.status_code == 403:
-            raise ForbiddenError(resp.json()["error"], response=resp)
+            raise ForbiddenError(error_message, response=resp)
         resp.raise_for_status()
         return resp
 
