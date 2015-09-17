@@ -28,7 +28,6 @@ class ForbiddenError(HTTPError):
 
 
 class ESSession(requests.Session):
-
     def __init__(self, base_url):
         super(ESSession, self).__init__()
         self.base_url = base_url

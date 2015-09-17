@@ -18,7 +18,6 @@ class DjangoElasticSearchModel(ElasticSearchModel):
 
 
 class DjangoResultSet(ResultSet):
-
     def get_objects(self, queryset=None):
         """
         Return an iterator of Django model objects in Elasticsearch order, optionally using the given Django queryset.
