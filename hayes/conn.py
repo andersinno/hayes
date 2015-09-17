@@ -1,11 +1,11 @@
 # -- encoding: UTF-8 --
-from itertools import islice
 import logging
+from itertools import islice
 
-from hayes.indexing import DocumentIndex, CompletionSuggestField
+from hayes.indexing import CompletionSuggestField, DocumentIndex
 from hayes.search import Search, SearchResults
-from hayes.search.queries import QueryStringQuery, Query
-from hayes.transport import ESSession, BadRequestError, NotFoundError
+from hayes.search.queries import Query, QueryStringQuery
+from hayes.transport import BadRequestError, ESSession, NotFoundError
 from hayes.utils import object_to_dict
 from six import string_types
 
@@ -88,8 +88,12 @@ class Hayes(object):
         key = "%s-sugg" % doctype
 
         try:
-            completion_suggest_field_name = \
-            [name for (name, f) in index.fields.items() if isinstance(f, CompletionSuggestField)][0]
+            completion_suggest_field_name = [
+                name
+                for (name, f)
+                in index.fields.items()
+                if isinstance(f, CompletionSuggestField)
+            ][0]
         except IndexError:
             raise ValueError("Index doesn't have a CompletionSuggestField")
         sugg_doc = {"text": text, "completion": {"field": completion_suggest_field_name}}

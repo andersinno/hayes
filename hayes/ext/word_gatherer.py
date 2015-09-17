@@ -1,11 +1,12 @@
 # -- encoding: UTF-8 --
-import unicodedata
 import hashlib
+import unicodedata
 from collections import Counter, defaultdict
 
 from hayes.analysis import builtin_simple_analyzer
-from hayes.ext.stopwords import finnish_stopwords, unicode_punctuation_chars, swedish_stopwords, russian_stopwords, \
-    english_stopwords
+from hayes.ext.stopwords import (english_stopwords, finnish_stopwords,
+                                 russian_stopwords, swedish_stopwords,
+                                 unicode_punctuation_chars)
 from hayes.indexing import DocumentIndex, IntegerField, TextField
 from hayes.search import Search
 from hayes.search.queries import MatchAllQuery, PrefixQuery

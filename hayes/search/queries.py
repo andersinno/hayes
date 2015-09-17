@@ -2,7 +2,7 @@
 from hayes.search.filters import AndFilter
 from hayes.search.internal import _Ranges
 from hayes.utils import object_to_dict
-from six import text_type, iteritems
+from six import iteritems, text_type
 
 
 def _clean_dict(in_dict):

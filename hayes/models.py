@@ -1,8 +1,10 @@
 # -- encoding: utf-8 --
 from __future__ import with_statement
+
+from six import text_type
+
 from pyes.es import ResultSet
 from pyes.models import ElasticSearchModel
-from six import text_type
 
 
 class DjangoElasticSearchModel(ElasticSearchModel):

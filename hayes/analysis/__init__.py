@@ -56,9 +56,10 @@ class SimpleAnalyzer(AnalysisBase):
 
 class LanguageAnalyzer(AnalysisBase):
     KNOWN_LANGUAGES = (
-    "arabic", "armenian", "basque", "brazilian", "bulgarian", "catalan", "chinese", "cjk", "czech", "danish", "dutch",
-    "english", "finnish", "french", "galician", "german", "greek", "hindi", "hungarian", "indonesian", "italian",
-    "norwegian", "persian", "portuguese", "romanian", "russian", "spanish", "swedish", "turkish", "thai")
+        "arabic", "armenian", "basque", "brazilian", "bulgarian", "catalan", "chinese", "cjk", "czech", "danish", "dutch",
+        "english", "finnish", "french", "galician", "german", "greek", "hindi", "hungarian", "indonesian", "italian",
+        "norwegian", "persian", "portuguese", "romanian", "russian", "spanish", "swedish", "turkish", "thai"
+    )
 
     def __init__(self, name, language="english"):
         super(LanguageAnalyzer, self).__init__(name)
@@ -70,9 +71,10 @@ class LanguageAnalyzer(AnalysisBase):
 class SnowballAnalyzer(AnalysisBase):
     type = "snowball"
     KNOWN_LANGUAGES = (
-    "Armenian", "Basque", "Catalan", "Danish", "Dutch", "English", "Finnish", "French", "German", "German2",
-    "Hungarian", "Italian", "Kp", "Lovins", "Norwegian", "Porter", "Portuguese", "Romanian", "Russian", "Spanish",
-    "Swedish", "Turkish")
+        "Armenian", "Basque", "Catalan", "Danish", "Dutch", "English", "Finnish", "French", "German", "German2",
+        "Hungarian", "Italian", "Kp", "Lovins", "Norwegian", "Porter", "Portuguese", "Romanian", "Russian", "Spanish",
+        "Swedish", "Turkish"
+    )
 
     def __init__(self, name, language="English"):
         super(SnowballAnalyzer, self).__init__(name)
@@ -94,8 +96,12 @@ class NgramTokenizer(AnalysisBase):
         self.token_chars = ["letter"]
 
     def to_dict(self, **extra):
-        return super(NgramTokenizer, self).to_dict(min_gram=self.min_gram, max_gram=self.max_gram,
-                                                   token_chars=self.token_chars, **extra)
+        return super(NgramTokenizer, self).to_dict(
+            min_gram=self.min_gram,
+            max_gram=self.max_gram,
+            token_chars=self.token_chars,
+            **extra
+        )
 
 
 ####

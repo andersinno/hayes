@@ -1,9 +1,10 @@
 # -- encoding: UTF-8 --
 
-from django.conf import settings
 from hayes.conn import Hayes
 from hayes.importing import load
 from hayes.indexing import DocumentIndex
+
+from django.conf import settings
 
 _indexes_cache = None
 

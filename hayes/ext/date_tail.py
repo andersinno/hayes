@@ -1,5 +1,6 @@
 # -- encoding: UTF-8 --
 import datetime
+
 from hayes.search.queries import RangeQuery
 
 
