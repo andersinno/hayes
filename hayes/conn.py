@@ -1,12 +1,11 @@
 # -- encoding: UTF-8 --
 import logging
-from itertools import islice
 
 from hayes.indexing import CompletionSuggestField, DocumentIndex
 from hayes.search import Search, SearchResults
 from hayes.search.queries import Query, QueryStringQuery
 from hayes.transport import BadRequestError, ESSession, NotFoundError
-from hayes.utils import object_to_dict
+from hayes.utils import object_to_dict, batch_iterable
 from six import string_types
 
 
@@ -18,15 +17,17 @@ class CompletionSuggestionResults(object):
 
 
 class Hayes(object):
-    def __init__(self, server, index):
+    def __init__(self, server, default_coll_name=None):
         self.log = logging.getLogger("Hayes")
         if not server.startswith("http://"):
             server = "http://%s/" % server
         self.session = ESSession(base_url=server)
-        self.default_coll_name = index
+        self.default_coll_name = default_coll_name
 
     def index_objects(self, index, objects_iterable, bulk_size, coll_name=None):
         coll_name = coll_name or self.default_coll_name
+        if not coll_name:
+            raise ValueError("No coll_name given")
         doctype = index.name
         keys = set(index.fields)
         keys.update(("id", "_id"))
@@ -42,19 +43,16 @@ class Hayes(object):
                     self.session.post("/%s/%s/" % (coll_name, doctype), data=obj)
                 n += 1
         else:
-            while True:
+            for obj_batch in batch_iterable(objects_iterable, bulk_size):
                 batch = []
-                for obj in islice(objects_iterable, 0, bulk_size):
+                for obj in obj_batch:
                     obj = object_to_dict(obj, keys=keys)
                     obj_id = obj.pop("_id", None) or obj.pop("id", None)
                     if obj_id is not None:
                         batch.append(({"index": {"_id": obj_id}}, obj))
                     else:
                         batch.append(({"index": {}}, obj))
-                if not batch:
-                    break
                 resp = self.session.bulk("post", "/%s/%s/_bulk" % (coll_name, doctype), data=batch).json()
-
                 n += len(resp.get("items") or ())
         return n
 
