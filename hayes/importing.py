@@ -1,7 +1,7 @@
 # coding=utf-8
 try:
     import importlib
-except:
+except ImportError:
     from django.utils import importlib
 
 
@@ -9,7 +9,7 @@ def load(specification, context_explanation="Load"):
     module_name, object_name = specification.split(":", 1)
     try:
         module = importlib.import_module(module_name)
-    except ImportError, ie:
+    except ImportError as ie:
         raise ValueError(u"%s: Could not import module %r to load %r from. (%r)" % (context_explanation, module_name, object_name, ie))
     obj = getattr(module, object_name, None)
     if obj is None:

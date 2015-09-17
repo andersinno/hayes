@@ -2,6 +2,7 @@
 from hayes.search.filters import AndFilter
 from hayes.search.internal import _Ranges
 from hayes.utils import object_to_dict
+from six import text_type, iteritems
 
 
 def _clean_dict(in_dict):
@@ -11,7 +12,7 @@ def _clean_dict(in_dict):
 	:return:
 	"""
 	out = {}
-	for key, value in in_dict.iteritems():
+	for key, value in iteritems(in_dict):
 		if isinstance(value, dict):
 			value = _clean_dict(value)
 		if value is None:
@@ -30,7 +31,7 @@ class QueryStringQuery(Query):
 		self.query = query
 
 	def as_dict(self):
-		return {"query_string": {"query": unicode(self.query)}}
+		return {"query_string": {"query": text_type(self.query)}}
 
 
 class MatchQuery(Query):
@@ -42,7 +43,7 @@ class MatchQuery(Query):
 		self.fuzziness = fuzziness
 
 	def as_dict(self):
-		query_frag = {self.field: {"query": unicode(self.value)}}
+		query_frag = {self.field: {"query": text_type(self.value)}}
 		if self.operator is None:
 			return {"match": query_frag}
 		if self.operator in ("or", "and"):
@@ -127,7 +128,7 @@ class PrefixQuery(Query):
 		self.boost = boost
 
 	def as_dict(self):
-		return _clean_dict({"prefix": {(self.field): {"value": self.value, "boost": float(self.boost) if self.boost else None}}})
+		return _clean_dict({"prefix": {self.field: {"value": self.value, "boost": float(self.boost) if self.boost else None}}})
 
 
 class TermQuery(Query):
@@ -138,7 +139,7 @@ class TermQuery(Query):
 		self.boost = boost
 
 	def as_dict(self):
-		return _clean_dict({"term": {self.field: {"value": unicode(self.value), "boost": self.boost}}})
+		return _clean_dict({"term": {self.field: {"value": text_type(self.value), "boost": self.boost}}})
 
 
 class WildcardQuery(Query):
@@ -149,7 +150,7 @@ class WildcardQuery(Query):
 		self.boost = boost
 
 	def as_dict(self):
-		return _clean_dict({"wildcard": {self.field: {"value": unicode(self.value), "boost": self.boost}}})
+		return _clean_dict({"wildcard": {self.field: {"value": text_type(self.value), "boost": self.boost}}})
 
 
 class FuzzyQuery(Query):
@@ -166,7 +167,7 @@ class FuzzyQuery(Query):
 		return _clean_dict({
 			"fuzzy": {
 				self.field: {
-					"value": unicode(self.value),
+					"value": text_type(self.value),
 					"boost": self.boost,
 					"fuzziness": self.fuzziness,
 					"prefix_length": self.prefix_length,

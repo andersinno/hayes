@@ -7,10 +7,10 @@ from hayes.search import Search, SearchResults
 from hayes.search.queries import QueryStringQuery, Query
 from hayes.transport import ESSession, BadRequestError, NotFoundError
 from hayes.utils import object_to_dict
+from six import string_types
 
 
 class CompletionSuggestionResults(object):
-
 	def __init__(self, index, raw_result):
 		self.index = index
 		self.raw_result = raw_result
@@ -18,7 +18,6 @@ class CompletionSuggestionResults(object):
 
 
 class Hayes(object):
-
 	def __init__(self, server, index):
 		self.log = logging.getLogger("Hayes")
 		if not server.startswith("http://"):
@@ -36,9 +35,9 @@ class Hayes(object):
 		if not bulk_size or bulk_size <= 0:
 			for obj in objects_iterable:
 				obj = object_to_dict(obj, keys=keys)
-				id = obj.pop("_id", None) or obj.pop("id", None)
-				if id is not None:
-					self.session.put("/%s/%s/%s" % (coll_name, doctype, id), data=obj)
+				obj_id = obj.pop("_id", None) or obj.pop("id", None)
+				if obj_id is not None:
+					self.session.put("/%s/%s/%s" % (coll_name, doctype, obj_id), data=obj)
 				else:
 					self.session.post("/%s/%s/" % (coll_name, doctype), data=obj)
 				n += 1
@@ -47,9 +46,9 @@ class Hayes(object):
 				batch = []
 				for obj in islice(objects_iterable, 0, bulk_size):
 					obj = object_to_dict(obj, keys=keys)
-					id = obj.pop("_id", None) or obj.pop("id", None)
-					if id is not None:
-						batch.append(({"index": {"_id": id}}, obj))
+					obj_id = obj.pop("_id", None) or obj.pop("id", None)
+					if obj_id is not None:
+						batch.append(({"index": {"_id": obj_id}}, obj))
 					else:
 						batch.append(({"index": {}}, obj))
 				if not batch:
@@ -66,8 +65,8 @@ class Hayes(object):
 
 		settings = index.get_settings_fragment()
 		try:
-			resp = self.session.put("/%s/" % coll_name, data=settings)  # Create the collection
-		except BadRequestError, exc:
+			self.session.put("/%s/" % coll_name, data=settings)  # Create the collection
+		except BadRequestError as exc:
 			if "IndexAlreadyExistsException" in exc.message:  # Already existed, thus close, update settings, reopen (bleeeh)
 				self.session.post("/%s/_close" % coll_name)
 				self.session.put("/%s/_settings" % coll_name, data=settings)
@@ -89,20 +88,20 @@ class Hayes(object):
 		key = "%s-sugg" % doctype
 
 		try:
-			completion_suggest_field_name = [name for (name, f) in index.fields.iteritems() if isinstance(f, CompletionSuggestField)][0]
+			completion_suggest_field_name = [name for (name, f) in index.fields.items() if isinstance(f, CompletionSuggestField)][0]
 		except IndexError:
 			raise ValueError("Index doesn't have a CompletionSuggestField")
 		sugg_doc = {"text": text, "completion": {"field": completion_suggest_field_name}}
 		if fuzzy:
 			sugg_doc["completion"]["fuzzy"] = {"unicode_aware": True}
 
-		data = self.session.post("/%s/_suggest" % (coll_name), data={key: sugg_doc}).json()
+		data = self.session.post("/%s/_suggest" % coll_name, data={key: sugg_doc}).json()
 		return CompletionSuggestionResults(index, data[key][0])
 
 	def search(self, search, indexes=None, count=50, start=0, page=None, coll_name=None):
 		coll_name = coll_name or self.default_coll_name
 
-		if isinstance(search, basestring):  # This is a silly default, I suppose
+		if isinstance(search, string_types):  # This is a silly default, I suppose
 			search = Search(QueryStringQuery(search))
 		if isinstance(search, Query):
 			search = Search(query=search)
@@ -111,7 +110,7 @@ class Hayes(object):
 		if indexes:
 			url = "/%s/%s/_search" % (coll_name, ",".join(i.name for i in indexes))
 		else:
-			url = "/%s/_search" % (coll_name)
+			url = "/%s/_search" % coll_name
 
 		search_obj["from"] = int(start)
 		search_obj["size"] = int(count)

@@ -3,13 +3,14 @@ from collections import defaultdict
 from hayes.search.highlight import HighlightSpec, HighlightFieldSpec
 from hayes.search.queries import FilteredQuery, QueryStringQuery
 from hayes.utils import object_to_dict
+from six import string_types
 
 
 class Search(object):
 
 	def __init__(self, query, filter=None, fields=None, sort=None, highlight=None):
 		# XXX: facets?
-		if isinstance(query, basestring):
+		if isinstance(query, string_types):
 			query = QueryStringQuery(query)
 		self.query = query
 		self.filter = filter
@@ -56,7 +57,7 @@ class SearchResult(dict):
 
 	def get_highlights(self):
 		out = []
-		for field, highlights in sorted(self.get("highlight", {}).iteritems()):
+		for field, highlights in sorted(self.get("highlight", {}).items()):
 			out.extend(highlights)
 		return out
 
@@ -80,7 +81,7 @@ class SearchResults(object):
 		self.by_type = defaultdict(list)
 		for hit in self.hits:
 			self.by_type[hit.get("_type")].append(hit)
-		self.by_type = dict(self.by_type.iteritems())
+		self.by_type = dict(self.by_type.items())
 
 	def __iter__(self):
 		return iter(self.hits)

@@ -26,7 +26,7 @@ class DocumentIndex(object):
 
 		properties = mapping_json["properties"] = {}
 
-		for field_name, field in self.fields.iteritems():
+		for field_name, field in self.fields.items():
 			if field_name == "_all":
 				mapping_json["_all"] = object_to_dict(field)
 			else:
@@ -39,7 +39,7 @@ class DocumentIndex(object):
 		analyzers_by_name = {}
 		tokenizers_by_name = {}
 		filters_by_name = {}
-		for field in self.fields.itervalues():
+		for field in self.fields.values():
 			if hasattr(field, "get_analyzers"):  # It could be a dict too
 				for analyzer in field.get_analyzers():
 					if analyzer and isinstance(analyzer, AnalysisBase):
@@ -51,7 +51,7 @@ class DocumentIndex(object):
 
 		def to_dict_m(m):
 			out = {}
-			for k in m.itervalues():
+			for k in m.values():
 				d = k.to_dict()
 				if d:
 					out[k.name] = d

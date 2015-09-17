@@ -1,5 +1,7 @@
 # -- encoding: UTF-8 --
 
+from six import text_type
+
 
 class AnalysisBase(object):
 	type = None
@@ -30,7 +32,7 @@ class CustomAnalyzer(AnalysisBase):
 		self.filters = list(filters or [])
 
 	def to_dict(self, **extra):
-		filters = [unicode(getattr(f, "name", f)) for f in self.filters]
+		filters = [text_type(getattr(f, "name", f)) for f in self.filters]
 		return super(CustomAnalyzer, self).to_dict(tokenizer=self.tokenizer, filter=filters)
 
 

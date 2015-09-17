@@ -8,6 +8,7 @@ from hayes.ext.stopwords import finnish_stopwords, unicode_punctuation_chars, sw
 from hayes.indexing import DocumentIndex, IntegerField, TextField
 from hayes.search import Search
 from hayes.search.queries import MatchAllQuery, PrefixQuery
+from six import text_type
 
 
 def default_tokenizer(content):
@@ -15,7 +16,7 @@ def default_tokenizer(content):
 
 
 def smart_tokenizer(content, stopwords=()):
-	words = unicode(content).split()
+	words = text_type(content).split()
 	words = [word.strip(unicode_punctuation_chars) for word in words]
 	words = [word for word in words if len(word) > 3 and word.lower() not in stopwords]
 	words = [word for word in words if not word.isdigit()]  # Filter out full numbers
@@ -86,13 +87,13 @@ class WordGatherer(object):
 		:param cutoff: Ignore words with less than this many occurrences.
 		"""
 		counts_by_uid = defaultdict(lambda: Counter())
-		for word, count in self._gather_words(index, fields, tokenizer=tokenizer).iteritems():
+		for word, count in self._gather_words(index, fields, tokenizer=tokenizer).items():
 			uid = hashlib.sha1(unicodedata.normalize("NFKD", word.lower()).encode("UTF-8")).hexdigest()
 			counts_by_uid[uid][word] += count
 
-		for uid, word_to_count in counts_by_uid.iteritems():
+		for uid, word_to_count in counts_by_uid.items():
 			word = word_to_count.most_common(1)[0][0]
-			count = sum(word_to_count.itervalues())
+			count = sum(word_to_count.values())
 			if count <= cutoff:
 				continue
 			self.connection.session.post("/%s/%s/%s/_update" % (self.target_coll_name, self.target_type, uid), data={

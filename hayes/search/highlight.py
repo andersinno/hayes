@@ -41,5 +41,5 @@ class HighlightSpec(_HighlightBaseSpec):
 
 	def to_dict(self):
 		out = super(HighlightSpec, self).to_dict()
-		out["fields"] = dict((name, object_to_dict(spec)) for (name, spec) in self.fields.iteritems())
+		out["fields"] = dict((name, object_to_dict(spec)) for (name, spec) in self.fields.items())
 		return out

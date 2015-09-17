@@ -23,18 +23,19 @@ def generate_date_tail_boost_queries(field, timedeltas_and_boosts, relative_to=N
 
 	:param field: field name to generate the queries against
 	:param timedeltas_and_boosts: dictionary of timedelta instances and their boosts. Negative or zero boost values will not generate rangequeries.
+	:type timedeltas_and_boosts: dict[timedelta, float]
 	:param relative_to: Relative to this datetime (may be None for "now")
 	:return: List of RangeQueries
 	"""
 	relative_to = relative_to or datetime.datetime.now()
 	times = {}
-	for timedelta, boost in timedeltas_and_boosts.iteritems():
+	for timedelta, boost in timedeltas_and_boosts.items():
 		date = (relative_to - timedelta).date()
 		times[date] = boost
-	times = sorted(times.iteritems(), key=lambda i: i[0])
+	times = sorted(times.items(), key=lambda i: i[0])
 	queries = []
 
-	for x in xrange(len(times)):
+	for x in range(len(times)):
 		kwargs = {"field": field, "boost": times[x][1]}
 		if x == 0:
 			kwargs["lte"] = times[x][0]

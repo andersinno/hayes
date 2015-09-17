@@ -2,6 +2,7 @@
 from __future__ import with_statement
 from pyes.es import ResultSet
 from pyes.models import ElasticSearchModel
+from six import text_type
 
 
 class DjangoElasticSearchModel(ElasticSearchModel):
@@ -31,7 +32,7 @@ class DjangoResultSet(ResultSet):
             queryset = self[0].django_model.objects.all()
 
         pks = [res.pk for res in self if res.django_model == queryset.model]
-        object_map = dict((unicode(obj.pk), obj) for obj in queryset.filter(pk__in=pks))
+        object_map = dict((text_type(obj.pk), obj) for obj in queryset.filter(pk__in=pks))
         result_map = dict((res.pk, res) for res in self if res.pk in object_map)
 
         for pk in pks:
