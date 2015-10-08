@@ -10,7 +10,7 @@ requirements = [
 
 setup(
     name='hayes',
-    version='0.0.3.4',
+    version='0.0.4',
     packages=['hayes', 'hayes.analysis', 'hayes.ext', 'hayes.django_interop', 'hayes.search'],
     license='MIT',
     long_description="n/a",
