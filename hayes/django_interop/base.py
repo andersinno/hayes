@@ -36,5 +36,5 @@ def get_index_by_name(name):
 def get_connection(**kwargs):
     kwargs.setdefault("connection_class", Hayes)
     kwargs.setdefault("server", settings.HAYES_SERVER)
-    kwargs.setdefault("index", settings.HAYES_DEFAULT_INDEX)
+    kwargs.setdefault("default_coll_name", settings.HAYES_DEFAULT_INDEX)
     return (kwargs.pop("connection_class"))(**kwargs)
