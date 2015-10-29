@@ -19,7 +19,7 @@ class CompletionSuggestionResults(object):
 class Hayes(object):
     def __init__(self, server, default_coll_name=None):
         self.log = logging.getLogger("Hayes")
-        if not server.startswith("http://"):
+        if "://" not in server:
             server = "http://%s/" % server
         self.session = ESSession(base_url=server)
         self.default_coll_name = default_coll_name
