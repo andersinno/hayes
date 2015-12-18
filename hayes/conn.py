@@ -1,10 +1,11 @@
 # -- encoding: UTF-8 --
 import logging
 
+from hayes.excs import BadRequestError, NotFoundError
 from hayes.indexing import CompletionSuggestField, DocumentIndex
 from hayes.search import Search, SearchResults
 from hayes.search.queries import Query, QueryStringQuery
-from hayes.transport import BadRequestError, ESSession, NotFoundError
+from hayes.transport import ESSession
 from hayes.utils import object_to_dict, batch_iterable
 from six import string_types
 
@@ -65,7 +66,8 @@ class Hayes(object):
         try:
             self.session.put("/%s/" % coll_name, data=settings)  # Create the collection
         except BadRequestError as exc:
-            if "IndexAlreadyExistsException" in exc.message:  # Already existed, thus close, update settings, reopen (bleeeh)
+            if exc.type == "index_already_exists_exception" or "IndexAlreadyExistsException" in exc.message:
+                # Index already exists, thus close, update settings, reopen. (Bleh)
                 self.session.post("/%s/_close" % coll_name)
                 self.session.put("/%s/_settings" % coll_name, data=settings)
                 self.session.post("/%s/_open" % coll_name)

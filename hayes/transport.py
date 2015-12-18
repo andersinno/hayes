@@ -4,7 +4,7 @@ import datetime
 import json
 
 import requests
-from requests.exceptions import HTTPError
+from hayes.excs import error_from_response
 
 
 def json_encode(object):
@@ -14,18 +14,6 @@ def json_encode(object):
         return object.isoformat()
     else:
         raise ValueError("Can't encode %r" % object)
-
-
-class NotFoundError(HTTPError):
-    pass
-
-
-class BadRequestError(HTTPError):
-    pass
-
-
-class ForbiddenError(HTTPError):
-    pass
 
 
 class ESSession(requests.Session):
@@ -43,13 +31,9 @@ class ESSession(requests.Session):
         kwargs.update(method=method, url=url, data=data)
 
         resp = super(ESSession, self).request(**kwargs)
-        error_message = resp.json().get("error", "")
-        if resp.status_code == 404:
-            raise NotFoundError(error_message, response=resp)
-        elif resp.status_code == 400:
-            raise BadRequestError(error_message, response=resp)
-        elif resp.status_code == 403:
-            raise ForbiddenError(error_message, response=resp)
+        exc = error_from_response(response=resp, request_data=kwargs)
+        if exc:
+            raise exc
         resp.raise_for_status()
         return resp
 
