@@ -74,13 +74,17 @@ class Hayes(object):
             else:
                 raise  # We didn't expect _this_ exception
 
-        if delete_first:
+        mapping_url = "/%s/%s/_mapping" % (coll_name, doctype)
+        if delete_first and self.session.get(mapping_url).json():
             try:
                 self.session.delete("/%s/%s" % (coll_name, doctype))
                 self.log.info("Mapping %s deleted." % doctype)
             except NotFoundError:
                 pass
-        self.session.put("/%s/%s/_mapping" % (coll_name, doctype), data=index.get_mapping())
+            except BadRequestError:
+                raise Exception("You're using a version of Elasticsearch that does not support deleting a single type mapping.")
+
+        self.session.put(mapping_url, data=index.get_mapping())
 
     def completion_suggest(self, index, text, fuzzy=None, coll_name=None):
         coll_name = coll_name or self.default_coll_name
