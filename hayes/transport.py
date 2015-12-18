@@ -23,7 +23,7 @@ class ESSession(requests.Session):
 
     def request(self, method, url, **kwargs):
         if url.startswith("/"):
-            url = self.base_url + url
+            url = self.base_url.rstrip("/") + url
         data = kwargs.pop("data", None)
         if data and isinstance(data, dict):
             data = json.dumps(data, default=json_encode)
