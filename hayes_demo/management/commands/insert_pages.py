@@ -5,7 +5,7 @@ import json
 from django.core.management import BaseCommand
 from django.db.transaction import commit_on_success
 
-from hayes_test.models import Page
+from hayes_demo.models import Page
 
 
 class Command(BaseCommand):

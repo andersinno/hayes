@@ -7,7 +7,7 @@ SECRET_KEY = 'ff' * 30
 DEBUG = True
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = ["*"]
-INSTALLED_APPS = ('hayes_test',)
+INSTALLED_APPS = ('hayes_demo',)
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -21,11 +21,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.request',
     "django.core.context_processors.csrf",
-    "hayes_test.settings.extra_context",
+    "hayes_demo.settings.extra_context",
     "django.contrib.messages.context_processors.messages"
 )
-ROOT_URLCONF = 'hayes_test.app'
-WSGI_APPLICATION = 'hayes_test.app.application'
+ROOT_URLCONF = 'hayes_demo.app'
+WSGI_APPLICATION = 'hayes_demo.app.application'
 DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3',
                          'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), }}
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
@@ -40,7 +40,7 @@ USE_TZ = False
 TEMPLATE_DIRS = [BASE_DIR]
 
 HAYES_INDEXES = [
-    "hayes_test.index:get_indexes",
+    "hayes_demo.index:get_indexes",
 ]
 HAYES_SERVER = "http://localhost:9200/"
 HAYES_DEFAULT_INDEX = "hh"

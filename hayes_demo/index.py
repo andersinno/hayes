@@ -8,7 +8,7 @@ from hayes.analysis import SnowballAnalyzer, StandardAnalyzer
 from hayes.indexing import (
     CompletionSuggestField, DateField, DocumentIndex, IntegerField,
     StringField, TextField)
-from hayes_test.models import Page
+from hayes_demo.models import Page
 
 
 class Person(dict):
