@@ -23,7 +23,9 @@ def generate_date_tail_boost_queries(field, timedeltas_and_boosts, relative_to=N
     Refs: http://elasticsearch-users.115913.n3.nabble.com/Boost-recent-documents-td2126107.html#a2126317
 
     :param field: field name to generate the queries against
-    :param timedeltas_and_boosts: dictionary of timedelta instances and their boosts. Negative or zero boost values will not generate rangequeries.
+    :param timedeltas_and_boosts:
+      dictionary of timedelta instances and their boosts. Negative or
+      zero boost values will not generate rangequeries.
     :type timedeltas_and_boosts: dict[timedelta, float]
     :param relative_to: Relative to this datetime (may be None for "now")
     :return: List of RangeQueries

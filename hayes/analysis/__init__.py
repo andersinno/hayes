@@ -56,9 +56,12 @@ class SimpleAnalyzer(AnalysisBase):
 
 class LanguageAnalyzer(AnalysisBase):
     KNOWN_LANGUAGES = (
-        "arabic", "armenian", "basque", "brazilian", "bulgarian", "catalan", "chinese", "cjk", "czech", "danish", "dutch",
-        "english", "finnish", "french", "galician", "german", "greek", "hindi", "hungarian", "indonesian", "italian",
-        "norwegian", "persian", "portuguese", "romanian", "russian", "spanish", "swedish", "turkish", "thai"
+        "arabic", "armenian", "basque", "brazilian", "bulgarian",
+        "catalan", "chinese", "cjk", "czech", "danish", "dutch",
+        "english", "finnish", "french", "galician", "german",
+        "greek", "hindi", "hungarian", "indonesian", "italian",
+        "norwegian", "persian", "portuguese", "romanian", "russian",
+        "spanish", "swedish", "turkish", "thai",
     )
 
     def __init__(self, name, language="english"):
