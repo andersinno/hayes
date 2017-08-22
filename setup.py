@@ -14,7 +14,7 @@ setup(
     packages=['hayes', 'hayes.analysis', 'hayes.ext', 'hayes.django_interop', 'hayes.search'],
     license='MIT',
     long_description="n/a",
-    maintainer="Aarni Koskela",
-    maintainer_email="akx@iki.fi",
+    maintainer="Anders Innovations",
+    maintainer_email="support@anders.fi",
     install_requires=requirements
 )
