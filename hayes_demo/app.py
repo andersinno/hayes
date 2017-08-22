@@ -2,15 +2,16 @@
 
 import json
 
-from django.conf.urls import patterns, url
 from django import forms
+from django.conf.urls import patterns, url
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 
 from hayes.django_interop import get_connection, get_index_by_name
 from hayes.search import Search
 from hayes.search.filters import PrefixFilter
-from hayes.search.queries import QueryStringQuery, BoolQuery, RangeQuery, MatchAllQuery, MatchQuery
+from hayes.search.queries import (
+    BoolQuery, MatchAllQuery, MatchQuery, QueryStringQuery, RangeQuery)
 
 
 class SearchForm(forms.Form):

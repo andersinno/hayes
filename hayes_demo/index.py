@@ -5,7 +5,9 @@ import random
 from faker import Factory
 
 from hayes.analysis import SnowballAnalyzer, StandardAnalyzer
-from hayes.indexing import DocumentIndex, TextField, StringField, IntegerField, DateField, CompletionSuggestField
+from hayes.indexing import (
+    CompletionSuggestField, DateField, DocumentIndex, IntegerField,
+    StringField, TextField)
 from hayes_test.models import Page
 
 

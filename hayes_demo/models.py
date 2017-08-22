@@ -2,6 +2,7 @@
 
 from django.db import models
 
+
 class Page(models.Model):
 	class Meta:
 		db_table = 'pg'

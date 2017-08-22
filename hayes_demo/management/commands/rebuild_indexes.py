@@ -1,6 +1,7 @@
 # -- encoding: UTF-8 --
 from django.core.management import BaseCommand
-from hayes.django_interop import get_connection, get_configured_indexes
+
+from hayes.django_interop import get_configured_indexes, get_connection
 
 
 class Command(BaseCommand):

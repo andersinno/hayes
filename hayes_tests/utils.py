@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from hayes.transport import ESSession
 from requests.models import Response
+
+from hayes.transport import ESSession
 
 
 class MockSession(ESSession):
@@ -9,4 +10,3 @@ class MockSession(ESSession):
         resp.status_code = 200
         resp._content = b"{}"
         return resp
-

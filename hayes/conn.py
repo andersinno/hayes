@@ -1,12 +1,13 @@
 # -- encoding: UTF-8 --
 import logging
 
+from six import string_types
+
 from hayes.indexing import CompletionSuggestField, DocumentIndex
 from hayes.search import Search, SearchResults
 from hayes.search.queries import Query, QueryStringQuery
 from hayes.transport import BadRequestError, ESSession, NotFoundError
-from hayes.utils import object_to_dict, batch_iterable
-from six import string_types
+from hayes.utils import batch_iterable, object_to_dict
 
 
 class CompletionSuggestionResults(object):

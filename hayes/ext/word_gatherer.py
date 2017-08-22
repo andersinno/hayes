@@ -3,14 +3,15 @@ import hashlib
 import unicodedata
 from collections import Counter, defaultdict
 
+from six import text_type
+
 from hayes.analysis import builtin_simple_analyzer
-from hayes.ext.stopwords import (english_stopwords, finnish_stopwords,
-                                 russian_stopwords, swedish_stopwords,
-                                 unicode_punctuation_chars)
+from hayes.ext.stopwords import (
+    english_stopwords, finnish_stopwords, russian_stopwords, swedish_stopwords,
+    unicode_punctuation_chars)
 from hayes.indexing import DocumentIndex, IntegerField, TextField
 from hayes.search import Search
 from hayes.search.queries import MatchAllQuery, PrefixQuery
-from six import text_type
 
 
 def default_tokenizer(content):

@@ -1,6 +1,6 @@
 # -- encoding: UTF-8 --
-import json
 import bz2
+import json
 
 from django.core.management import BaseCommand
 from django.db.transaction import commit_on_success

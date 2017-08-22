@@ -1,9 +1,11 @@
 # -- encoding: UTF-8 --
 from collections import defaultdict
-from hayes.search.highlight import HighlightSpec, HighlightFieldSpec
+
+from six import string_types
+
+from hayes.search.highlight import HighlightFieldSpec, HighlightSpec
 from hayes.search.queries import FilteredQuery, QueryStringQuery
 from hayes.utils import object_to_dict
-from six import string_types
 
 
 class Search(object):

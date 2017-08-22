@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+import pytest
+
 from hayes import Hayes
 from hayes_tests.utils import MockSession
-import pytest
 
 
 @pytest.fixture

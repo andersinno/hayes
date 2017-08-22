@@ -1,6 +1,7 @@
 # -- encoding: UTF-8 --
 
-import os, sys
+import os
+import sys
 
 if __name__ == "__main__":
 	os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hayes_test.settings")
