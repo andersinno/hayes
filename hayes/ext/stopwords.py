@@ -1,162 +1,146 @@
 # -*- coding: utf-8 -*-
 
-finnish_stopwords = set((u"aiemmin", u"aika", u"aikaa", u"aikaan", u"aikaisemmin", u"aikaisin", u"aikajen", u"aikana",
-                         u"aikoina", u"aikoo", u"aikovat", u"aina", u"ainakaan", u"ainakin", u"ainoa", u"ainoat",
-                         u"aiomme", u"aion", u"aiotte", u"aist", u"aivan", u"ajan", u"alas", u"alemmas", u"alkuisin",
-                         u"alkuun", u"alla", u"alle", u"aloitamme", u"aloitan", u"aloitat", u"aloitatte",
-                         u"aloitattivat", u"aloitettava", u"aloitettevaksi", u"aloitettu", u"aloitimme", u"aloitin",
-                         u"aloitit", u"aloititte", u"aloittaa", u"aloittamatta", u"aloitti", u"aloittivat", u"alta",
-                         u"aluksi", u"alussa", u"alusta", u"annettavaksi", u"annetteva", u"annettu", u"antaa",
-                         u"antamatta", u"antoi", u"aoua", u"apu", u"asia", u"asiaa", u"asian", u"asiasta", u"asiat",
-                         u"asioiden", u"asioihin", u"asioita", u"asti", u"auki", u"avuksi", u"avulla", u"avun",
-                         u"avutta", u"com", u"edelle", u"edelleen", u"edellä", u"edeltä", u"edemmäs", u"edes",
-                         u"edessä", u"edestä", u"ehkä", u"ei", u"eikä", u"eilen", u"eivät", u"eli", u"ellei",
-                         u"elleivät", u"ellemme", u"ellen", u"ellet", u"ellette", u"emme", u"en", u"enemmän", u"eniten",
-                         u"ennen", u"ensi", u"ensimmäinen", u"ensimmäiseksi", u"ensimmäisen", u"ensimmäisenä",
-                         u"ensimmäiset", u"ensimmäisiksi", u"ensimmäisinä", u"ensimmäisiä", u"ensimmäistä", u"ensin",
-                         u"entinen", u"entisen", u"entisiä", u"entisten", u"entistä", u"enää", u"eri", u"erittäin",
-                         u"erityisesti", u"eräiden", u"eräs", u"eräät", u"esi", u"esiin", u"esillä", u"esimerkiksi",
-                         u"et", u"eteen", u"etenkin", u"ette", u"ettei", u"että", u"fax", u"halua", u"haluaa",
-                         u"haluamatta", u"haluamme", u"haluan", u"haluat", u"haluatte", u"haluavat", u"halunnut",
-                         u"halusi", u"halusimme", u"halusin", u"halusit", u"halusitte", u"halusivat", u"halutessa",
-                         u"haluton", u"he", u"hei", u"heidän", u"heidät", u"heihin", u"heille", u"heillä", u"heiltä",
-                         u"heissä", u"heistä", u"heitä", u"helposti", u"heti", u"hetkellä", u"hieman", u"hlö", u"hlöä",
-                         u"html", u"http", u"huolimatta", u"huomenna", u"hyvien", u"hyviin", u"hyviksi", u"hyville",
-                         u"hyviltä", u"hyvin", u"hyvinä", u"hyvissä", u"hyvistä", u"hyviä", u"hyvä", u"hyvät", u"hyvää",
-                         u"hän", u"häneen", u"hänelle", u"hänellä", u"häneltä", u"hänen", u"hänessä", u"hänestä",
-                         u"hänet", u"häntä", u"ihan", u"ilman", u"ilmeisesti", u"itse", u"itsensä", u"itseään", u"ja",
-                         u"jo", u"johon", u"joiden", u"joihin", u"joiksi", u"joilla", u"joille", u"joilta", u"joina",
-                         u"joissa", u"joista", u"joita", u"joka", u"jokainen", u"jokin", u"joko", u"joksi", u"joku",
-                         u"jolla", u"jolle", u"jolloin", u"jolta", u"jompikumpi", u"jona", u"jonka", u"jonkin",
-                         u"jonne", u"joo", u"jopa", u"jos", u"joskus", u"jossa", u"josta", u"jota", u"jotain", u"joten",
-                         u"jotenkin", u"jotenkuten", u"jotka", u"jotta", u"jouduimme", u"jouduin", u"jouduit",
-                         u"jouduitte", u"joudumme", u"joudun", u"joudutte", u"joukkoon", u"joukossa", u"joukosta",
-                         u"joutua", u"joutui", u"joutuivat", u"joutumaan", u"joutuu", u"joutuvat", u"juuri", u"jälkeen",
-                         u"jälleen", u"jää", u"kahdeksan", u"kahdeksannen", u"kahdella", u"kahdelle", u"kahdelta",
-                         u"kahden", u"kahdessa", u"kahdesta", u"kahta", u"kahteen", u"kai", u"kaiken", u"kaikille",
-                         u"kaikilta", u"kaikkea", u"kaikki", u"kaikkia", u"kaikkiaan", u"kaikkialla", u"kaikkialle",
-                         u"kaikkialta", u"kaikkien", u"kaikkin", u"kaksi", u"kannalta", u"kannattaa", u"kanssa",
-                         u"kanssaan", u"kanssamme", u"kanssani", u"kanssanne", u"kanssasi", u"kauan", u"kauemmas",
-                         u"kaukana", u"kautta", u"kehen", u"keiden", u"keihin", u"keiksi", u"keille", u"keillä",
-                         u"keiltä", u"keinä", u"keissä", u"keistä", u"keitten", u"keittä", u"keitä", u"keneen",
-                         u"keneksi", u"kenelle", u"kenellä", u"keneltä", u"kenen", u"kenenä", u"kenessä", u"kenestä",
-                         u"kenet", u"kenettä", u"kennessästä", u"kenties", u"kerran", u"kerta", u"kertaa", u"keskellä",
-                         u"kesken", u"keskimäärin", u"ketkä", u"ketä", u"kiitos", u"klo", u"kohti", u"koko",
-                         u"kokonaan", u"kolmas", u"kolme", u"kolmen", u"kolmesti", u"koska", u"koskaan", u"kovin",
-                         u"kuin", u"kuinka", u"kuitenkaan", u"kuitenkin", u"kuka", u"kukaan", u"kukin", u"kumpainen",
-                         u"kumpainenkaan", u"kumpi", u"kumpikaan", u"kumpikin", u"kun", u"kuten", u"kuuden", u"kuusi",
-                         u"kuutta", u"kyllä", u"kymmenen", u"kyse", u"liian", u"liki", u"lisäksi", u"lisää", u"lla",
-                         u"lue", u"luo", u"luona", u"lähekkäin", u"lähelle", u"lähellä", u"läheltä", u"lähemmäs",
-                         u"lähes", u"lähinnä", u"lähtien", u"läpi", u"mahdollisimman", u"mahdollista", u"me", u"meidän",
-                         u"meidät", u"meihin", u"meille", u"meillä", u"meiltä", u"meissä", u"meistä", u"meitä",
-                         u"melkein", u"melko", u"menee", u"meneet", u"menemme", u"menen", u"menet", u"menette",
-                         u"menevät", u"meni", u"menimme", u"menin", u"menit", u"menivät", u"mennessä", u"mennyt",
-                         u"menossa", u"mihin", u"mikin", u"miksi", u"mikä", u"mikäli", u"mikään", u"mille", u"milloin",
-                         u"milloinkaan", u"millä", u"miltä", u"minkä", u"minne", u"minua", u"minulla",
-                         u"minulle", u"minulta", u"minun", u"minussa", u"minusta", u"minut", u"minuun", u"minä",
-                         u"missä", u"mistä", u"miten", u"mitkä", u"mitä", u"mitään", u"moi", u"molemmat", u"mones",
-                         u"monesti", u"monet", u"moni", u"moniaalla", u"moniaalle", u"moniaalta", u"monta", u"muassa",
-                         u"muiden", u"muita", u"muka", u"mukaan", u"mukaansa", u"mukana", u"mutta", u"muu", u"muualla",
-                         u"muualle", u"muualta", u"muuanne", u"muulloin", u"muun", u"muut", u"muuta", u"muutama",
-                         u"muutaman", u"muuten", u"myöhemmin", u"myös", u"myöskin", u"myöskään", u"myötä", u"ne",
-                         u"neljä", u"neljän", u"neljää", u"niiden", u"niihin", u"niiksi", u"niille", u"niillä",
-                         u"niiltä", u"niin", u"niinä", u"niissä", u"niistä", u"niitä", u"noiden", u"noihin", u"noiksi",
-                         u"noilla", u"noille", u"noilta", u"noin", u"noina", u"noissa", u"noista", u"noita",
-                         u"nopeammin", u"nopeasti", u"nopeiten", u"nro", u"nuo", u"nyt", u"näiden", u"näihin",
-                         u"näiksi", u"näille", u"näillä", u"näiltä", u"näin", u"näinä", u"näissä", u"näissähin",
-                         u"näissälle", u"näissältä", u"näissästä", u"näistä", u"näitä", u"nämä", u"ohi", u"oikea",
-                         u"oikealla", u"oikein", u"ole", u"olemme", u"olen", u"olet", u"olette", u"oleva", u"olevan",
-                         u"olevat", u"oli", u"olimme", u"olin", u"olisi", u"olisimme", u"olisin", u"olisit",
-                         u"olisitte", u"olisivat", u"olit", u"olitte", u"olivat", u"olla", u"olleet", u"olli", u"ollut",
-                         u"oma", u"omaa", u"omaan", u"omaksi", u"omalle", u"omalta", u"oman", u"omassa", u"omat",
-                         u"omia", u"omien", u"omiin", u"omiksi", u"omille", u"omilta", u"omissa", u"omista", u"on",
-                         u"onkin", u"onko", u"ovat", u"paikoittain", u"paitsi", u"pakosti", u"paljon", u"paras",
-                         u"paremmin", u"parempi", u"parhaillaan", u"parhaiten", u"perusteella", u"peräti", u"pian",
-                         u"pieneen", u"pieneksi", u"pienelle", u"pienellä", u"pieneltä", u"pienempi", u"pienestä",
-                         u"pieni", u"pienin", u"poikki", u"puh", u"puolesta", u"puolestaan", u"päälle", u"runsaasti",
-                         u"saa", u"saada", u"saakka", u"saat", u"sadam", u"sama", u"samaa", u"samaan", u"samalla",
-                         u"samallalta", u"samallassa", u"samallasta", u"saman", u"samat", u"samoin", u"sata", u"sataa",
-                         u"satojen", u"se", u"seitsemän", u"sekä", u"sen", u"seuraavat", u"siellä", u"sieltä",
-                         u"siihen", u"siinä", u"siis", u"siitä", u"sijaan", u"siksi", u"sille", u"silloin", u"sillä",
-                         u"silti", u"siltä", u"sinne", u"sinua", u"sinulla", u"sinulle", u"sinulta", u"sinun",
-                         u"sinussa", u"sinusta", u"sinut", u"sinuun", u"sinä", u"sis", u"sisäkkäin", u"sisällä",
-                         u"siten", u"sitten", u"sitä", u"sivu", u"ssa", u"sta", u"suoraan", u"suuntaan", u"suuren",
-                         u"suuret", u"suuri", u"suuria", u"suurin", u"suurten", u"taa", u"taas", u"taemmas", u"tahansa",
-                         u"tai", u"takaa", u"takaisin", u"takana", u"takia", u"tapauksessa", u"tavalla", u"tavoitteena",
-                         u"te", u"teidän", u"teidät", u"teihin", u"teille", u"teillä", u"teiltä", u"teissä", u"teistä",
-                         u"teitä", u"tietysti", u"tms", u"todella", u"toinen", u"toisaalla", u"toisaalle", u"toisaalta",
-                         u"toiseen", u"toiseksi", u"toisella", u"toiselle", u"toiselta", u"toisemme", u"toisen",
-                         u"toisensa", u"toisessa", u"toisesta", u"toista", u"toistaiseksi", u"toki", u"tosin",
-                         u"tuhannen", u"tuhat", u"tule", u"tulee", u"tulemme", u"tulen", u"tulet", u"tulette",
-                         u"tulevat", u"tulimme", u"tulin", u"tulisi", u"tulisimme", u"tulisin", u"tulisit",
-                         u"tulisitte", u"tulisivat", u"tulit", u"tulitte", u"tulivat", u"tulla", u"tulleet", u"tullut",
-                         u"tuntuu", u"tuo", u"tuoda", u"tuohon", u"tuoksi", u"tuolla", u"tuolle", u"tuolloin",
-                         u"tuolta", u"tuon", u"tuona", u"tuonne", u"tuossa", u"tuosta", u"tuota", u"tuskin", u"tykö",
-                         u"tähän", u"täksi", u"tälle", u"tällä", u"tällöin", u"tältä", u"tämä", u"tämän", u"tänne",
-                         u"tänä", u"tänään", u"tässä", u"tästä", u"täten", u"tätä", u"täysin", u"täytyvät", u"täytyy",
-                         u"täällä", u"täältä", u"usea", u"useasti", u"useimmiten", u"usein", u"useita", u"uudeksi",
-                         u"uudelleen", u"uuden", u"uudet", u"uusi", u"uusia", u"uusien", u"uusinta", u"uuteen",
-                         u"uutta", u"vaan", u"vai", u"vaiheessa", u"vaikea", u"vaikean", u"vaikeat", u"vaikeilla",
-                         u"vaikeille", u"vaikeilta", u"vaikeissa", u"vaikeista", u"vaikka", u"vain", u"varmasti",
-                         u"varsin", u"varsinkin", u"varten", u"vasemmalla", u"vasen", u"vasta", u"vastaan",
-                         u"vastakkain", u"vastan", u"verran", u"vielä", u"vierekkäin", u"vieressä", u"vieri", u"viiden",
-                         u"viim", u"viime", u"viimeinen", u"viimeisen", u"viimeksi", u"viisi", u"voi", u"voida",
-                         u"voidaan", u"voimme", u"voin", u"voisi", u"voit", u"voitte", u"voivat", u"vuoden", u"vuoksi",
-                         u"vuosi", u"vuosien", u"vuosina", u"vuotta", u"vähemmän", u"vähintään", u"vähiten", u"vähän",
-                         u"välillä", u"www", u"yhdeksän", u"yhden", u"yhdessä", u"yhteen", u"yhteensä", u"yhteydessä",
-                         u"yhteyteen", u"yhtä", u"yhtäälle", u"yhtäällä", u"yhtäältä", u"yhtään", u"yhä", u"yksi",
-                         u"yksin", u"yksittäin", u"yleensä", u"ylemmäs", u"yli", u"ylös", u"ympäri", u"yms", u"älköön",
-                         u"älä",))
-swedish_stopwords = set((u"alla", u"allt", u"att", u"av", u"blev", u"bli", u"blir", u"blivit", u"de", u"dem", u"den",
-                         u"denna", u"deras", u"dess", u"dessa", u"det", u"detta", u"dig", u"din", u"dina", u"ditt",
-                         u"du", u"där", u"då", u"efter", u"ej", u"eller", u"en", u"er", u"era", u"ert", u"ett", u"från",
-                         u"för", u"ha", u"hade", u"han", u"hans", u"har", u"henne", u"hennes", u"hon", u"honom", u"hur",
-                         u"här", u"i", u"icke", u"ingen", u"inom", u"inte", u"jag", u"ju", u"kan", u"kunde", u"man",
-                         u"med", u"mellan", u"men", u"mig", u"min", u"mina", u"mitt", u"mot", u"mycket", u"ni", u"nu",
-                         u"när", u"någon", u"något", u"några", u"och", u"om", u"oss", u"på", u"samma", u"sedan", u"sig",
-                         u"sin", u"sina", u"sitta", u"själv", u"skulle", u"som", u"så", u"sådan", u"sådana", u"sådant",
-                         u"till", u"under", u"upp", u"ut", u"utan", u"vad", u"var", u"vara", u"varför", u"varit",
-                         u"varje", u"vars", u"vart", u"vem", u"vi", u"vid", u"vilka", u"vilkas", u"vilken", u"vilket",
-                         u"vår", u"våra", u"vårt", u"än", u"är", u"åt", u"över"))
-english_stopwords = set((
-                        u"a", u"about", u"above", u"after", u"again", u"against", u"all", u"also", u"am", u"an", u"and",
-                        u"another", u"any", u"are", u"aren't", u"as", u"at", u"back", u"be", u"because", u"been",
-                        u"before", u"being", u"below", u"between", u"both", u"but", u"by", u"can't", u"cannot",
-                        u"could", u"couldn't", u"did", u"didn't", u"do", u"does", u"doesn't", u"doing", u"don't",
-                        u"down", u"during", u"each", u"even", u"ever", u"every", u"few", u"first", u"five", u"for",
-                        u"four", u"from", u"further", u"get", u"go", u"goes", u"had", u"hadn't", u"has", u"hasn't",
-                        u"have", u"haven't", u"having", u"he", u"he'd", u"he'll", u"he's", u"her", u"here", u"here's",
-                        u"hers", u"herself", u"high", u"him", u"himself", u"his", u"how", u"how's", u"however", u"i",
-                        u"i'd", u"i'll", u"i'm", u"i've", u"if", u"in", u"into", u"is", u"isn't", u"it", u"it's",
-                        u"its", u"itself", u"just", u"least", u"less", u"let's", u"like", u"long", u"made", u"make",
-                        u"many", u"me", u"more", u"most", u"mustn't", u"my", u"myself", u"never", u"new", u"no", u"nor",
-                        u"not", u"now", u"of", u"off", u"old", u"on", u"once", u"one", u"only", u"or", u"other",
-                        u"ought", u"our", u"ours", u"ourselves", u"out", u"over", u"own", u"put", u"said", u"same",
-                        u"say", u"says", u"second", u"see", u"seen", u"shan't", u"she", u"she'd", u"she'll", u"she's",
-                        u"should", u"shouldn't", u"since", u"so", u"some", u"still", u"such", u"take", u"than", u"that",
-                        u"that's", u"the", u"their", u"theirs", u"them", u"themselves", u"then", u"there", u"there's",
-                        u"these", u"they", u"they'd", u"they'll", u"they're", u"they've", u"this", u"those", u"three",
-                        u"through", u"to", u"too", u"two", u"under", u"until", u"up", u"very", u"was", u"wasn't",
-                        u"way", u"we", u"we'd", u"we'll", u"we're", u"we've", u"well", u"were", u"weren't", u"what",
-                        u"what's", u"when", u"when's", u"where", u"where's", u"whether", u"which", u"while", u"who",
-                        u"who's", u"whom", u"why", u"why's", u"with", u"won't", u"would", u"wouldn't", u"you", u"you'd",
-                        u"you'll", u"you're", u"you've", u"your", u"yours", u"yourself", u"yourselves"))
-russian_stopwords = set((u"и", u"в", u"во", u"не", u"что", u"он", u"на", u"я", u"с", u"со", u"как", u"а", u"то", u"все",
-                         u"она", u"так", u"его", u"но", u"да", u"ты", u"к", u"у", u"же", u"вы", u"за", u"бы", u"по",
-                         u"только", u"ее", u"мне", u"было", u"вот", u"от", u"меня", u"еще", u"нет", u"о", u"из", u"ему",
-                         u"теперь", u"когда", u"даже", u"ну", u"вдруг", u"ли", u"если", u"уже", u"или", u"ни", u"быть",
-                         u"был", u"него", u"до", u"вас", u"нибудь", u"опять", u"уж", u"вам", u"сказал", u"ведь", u"там",
-                         u"потом", u"себя", u"ничего", u"ей", u"может", u"они", u"тут", u"где", u"есть", u"надо",
-                         u"ней", u"для", u"мы", u"тебя", u"их", u"чем", u"была", u"сам", u"чтоб", u"без", u"будто",
-                         u"человек", u"чего", u"раз", u"тоже", u"себе", u"под", u"жизнь", u"будет", u"ж", u"тогда",
-                         u"кто", u"этот", u"говорил", u"того", u"потому", u"этого", u"какой", u"совсем", u"ним",
-                         u"здесь", u"этом", u"один", u"почти", u"мой", u"тем", u"чтобы", u"нее", u"кажется", u"сейчас",
-                         u"были", u"куда", u"зачем", u"сказать", u"всех", u"никогда", u"сегодня", u"можно", u"при",
-                         u"наконец", u"два", u"об", u"другой", u"хоть", u"после", u"над", u"больше", u"тот", u"через",
-                         u"эти", u"нас", u"про", u"всего", u"них", u"какая", u"много", u"разве", u"сказала", u"три",
-                         u"эту", u"моя", u"впрочем", u"хорошо", u"свою", u"этой", u"перед", u"иногда", u"лучше",
-                         u"чуть", u"том", u"нельзя", u"такой", u"им", u"более", u"всегда", u"конечно", u"всю",
-                         u"между"))
+finnish_stopwords = set(
+    u"""
+    aiemmin aika aikaa aikaan aikaisemmin aikaisin aikajen aikana aikoina
+    aikoo aikovat aina ainakaan ainakin ainoa ainoat aiomme aion aiotte
+    aist aivan ajan alas alemmas alkuisin alkuun alla alle aloitamme
+    aloitan aloitat aloitatte aloitattivat aloitettava aloitettevaksi
+    aloitettu aloitimme aloitin aloitit aloititte aloittaa aloittamatta
+    aloitti aloittivat alta aluksi alussa alusta annettavaksi annetteva
+    annettu antaa antamatta antoi aoua apu asia asiaa asian asiasta asiat
+    asioiden asioihin asioita asti auki avuksi avulla avun avutta com
+    edelle edelleen edellä edeltä edemmäs edes edessä edestä ehkä ei eikä
+    eilen eivät eli ellei elleivät ellemme ellen ellet ellette emme en
+    enemmän eniten ennen ensi ensimmäinen ensimmäiseksi ensimmäisen
+    ensimmäisenä ensimmäiset ensimmäisiksi ensimmäisinä ensimmäisiä
+    ensimmäistä ensin entinen entisen entisiä entisten entistä enää eri
+    erittäin erityisesti eräiden eräs eräät esi esiin esillä esimerkiksi
+    et eteen etenkin ette ettei että fax halua haluaa haluamatta haluamme
+    haluan haluat haluatte haluavat halunnut halusi halusimme halusin
+    halusit halusitte halusivat halutessa haluton he hei heidän heidät
+    heihin heille heillä heiltä heissä heistä heitä helposti heti hetkellä
+    hieman hlö hlöä html http huolimatta huomenna hyvien hyviin hyviksi
+    hyville hyviltä hyvin hyvinä hyvissä hyvistä hyviä hyvä hyvät hyvää
+    hän häneen hänelle hänellä häneltä hänen hänessä hänestä hänet häntä
+    ihan ilman ilmeisesti itse itsensä itseään ja jo johon joiden joihin
+    joiksi joilla joille joilta joina joissa joista joita joka jokainen
+    jokin joko joksi joku jolla jolle jolloin jolta jompikumpi jona jonka
+    jonkin jonne joo jopa jos joskus jossa josta jota jotain joten
+    jotenkin jotenkuten jotka jotta jouduimme jouduin jouduit jouduitte
+    joudumme joudun joudutte joukkoon joukossa joukosta joutua joutui
+    joutuivat joutumaan joutuu joutuvat juuri jälkeen jälleen jää
+    kahdeksan kahdeksannen kahdella kahdelle kahdelta kahden kahdessa
+    kahdesta kahta kahteen kai kaiken kaikille kaikilta kaikkea kaikki
+    kaikkia kaikkiaan kaikkialla kaikkialle kaikkialta kaikkien kaikkin
+    kaksi kannalta kannattaa kanssa kanssaan kanssamme kanssani kanssanne
+    kanssasi kauan kauemmas kaukana kautta kehen keiden keihin keiksi
+    keille keillä keiltä keinä keissä keistä keitten keittä keitä keneen
+    keneksi kenelle kenellä keneltä kenen kenenä kenessä kenestä kenet
+    kenettä kennessästä kenties kerran kerta kertaa keskellä kesken
+    keskimäärin ketkä ketä kiitos klo kohti koko kokonaan kolmas kolme
+    kolmen kolmesti koska koskaan kovin kuin kuinka kuitenkaan kuitenkin
+    kuka kukaan kukin kumpainen kumpainenkaan kumpi kumpikaan kumpikin kun
+    kuten kuuden kuusi kuutta kyllä kymmenen kyse liian liki lisäksi lisää
+    lla lue luo luona lähekkäin lähelle lähellä läheltä lähemmäs lähes
+    lähinnä lähtien läpi mahdollisimman mahdollista me meidän meidät
+    meihin meille meillä meiltä meissä meistä meitä melkein melko menee
+    meneet menemme menen menet menette menevät meni menimme menin menit
+    menivät mennessä mennyt menossa mihin mikin miksi mikä mikäli mikään
+    mille milloin milloinkaan millä miltä minkä minne minua minulla
+    minulle minulta minun minussa minusta minut minuun minä missä mistä
+    miten mitkä mitä mitään moi molemmat mones monesti monet moni
+    moniaalla moniaalle moniaalta monta muassa muiden muita muka mukaan
+    mukaansa mukana mutta muu muualla muualle muualta muuanne muulloin
+    muun muut muuta muutama muutaman muuten myöhemmin myös myöskin
+    myöskään myötä ne neljä neljän neljää niiden niihin niiksi niille
+    niillä niiltä niin niinä niissä niistä niitä noiden noihin noiksi
+    noilla noille noilta noin noina noissa noista noita nopeammin nopeasti
+    nopeiten nro nuo nyt näiden näihin näiksi näille näillä näiltä näin
+    näinä näissä näissähin näissälle näissältä näissästä näistä näitä nämä
+    ohi oikea oikealla oikein ole olemme olen olet olette oleva olevan
+    olevat oli olimme olin olisi olisimme olisin olisit olisitte olisivat
+    olit olitte olivat olla olleet olli ollut oma omaa omaan omaksi omalle
+    omalta oman omassa omat omia omien omiin omiksi omille omilta omissa
+    omista on onkin onko ovat paikoittain paitsi pakosti paljon paras
+    paremmin parempi parhaillaan parhaiten perusteella peräti pian pieneen
+    pieneksi pienelle pienellä pieneltä pienempi pienestä pieni pienin
+    poikki puh puolesta puolestaan päälle runsaasti saa saada saakka saat
+    sadam sama samaa samaan samalla samallalta samallassa samallasta saman
+    samat samoin sata sataa satojen se seitsemän sekä sen seuraavat siellä
+    sieltä siihen siinä siis siitä sijaan siksi sille silloin sillä silti
+    siltä sinne sinua sinulla sinulle sinulta sinun sinussa sinusta sinut
+    sinuun sinä sis sisäkkäin sisällä siten sitten sitä sivu ssa sta
+    suoraan suuntaan suuren suuret suuri suuria suurin suurten taa taas
+    taemmas tahansa tai takaa takaisin takana takia tapauksessa tavalla
+    tavoitteena te teidän teidät teihin teille teillä teiltä teissä teistä
+    teitä tietysti tms todella toinen toisaalla toisaalle toisaalta
+    toiseen toiseksi toisella toiselle toiselta toisemme toisen toisensa
+    toisessa toisesta toista toistaiseksi toki tosin tuhannen tuhat tule
+    tulee tulemme tulen tulet tulette tulevat tulimme tulin tulisi
+    tulisimme tulisin tulisit tulisitte tulisivat tulit tulitte tulivat
+    tulla tulleet tullut tuntuu tuo tuoda tuohon tuoksi tuolla tuolle
+    tuolloin tuolta tuon tuona tuonne tuossa tuosta tuota tuskin tykö
+    tähän täksi tälle tällä tällöin tältä tämä tämän tänne tänä tänään
+    tässä tästä täten tätä täysin täytyvät täytyy täällä täältä usea
+    useasti useimmiten usein useita uudeksi uudelleen uuden uudet uusi
+    uusia uusien uusinta uuteen uutta vaan vai vaiheessa vaikea vaikean
+    vaikeat vaikeilla vaikeille vaikeilta vaikeissa vaikeista vaikka vain
+    varmasti varsin varsinkin varten vasemmalla vasen vasta vastaan
+    vastakkain vastan verran vielä vierekkäin vieressä vieri viiden viim
+    viime viimeinen viimeisen viimeksi viisi voi voida voidaan voimme voin
+    voisi voit voitte voivat vuoden vuoksi vuosi vuosien vuosina vuotta
+    vähemmän vähintään vähiten vähän välillä www yhdeksän yhden yhdessä
+    yhteen yhteensä yhteydessä yhteyteen yhtä yhtäälle yhtäällä yhtäältä
+    yhtään yhä yksi yksin yksittäin yleensä ylemmäs yli ylös ympäri yms
+    älköön älä""".strip().split())
+
+swedish_stopwords = set(
+    u"""
+    alla allt att av blev bli blir blivit de dem den denna deras dess
+    dessa det detta dig din dina ditt du där då efter ej eller en er era
+    ert ett från för ha hade han hans har henne hennes hon honom hur här i
+    icke ingen inom inte jag ju kan kunde man med mellan men mig min mina
+    mitt mot mycket ni nu när någon något några och om oss på samma sedan
+    sig sin sina sitta själv skulle som så sådan sådana sådant till under
+    upp ut utan vad var vara varför varit varje vars vart vem vi vid vilka
+    vilkas vilken vilket vår våra vårt än är åt över""".strip().split())
+
+english_stopwords = set(
+    u"""
+    a about above after again against all also am an and another any are
+    aren't as at back be because been before being below between both but
+    by can't cannot could couldn't did didn't do does doesn't doing don't
+    down during each even ever every few first five for four from further
+    get go goes had hadn't has hasn't have haven't having he he'd he'll
+    he's her here here's hers herself high him himself his how how's
+    however i i'd i'll i'm i've if in into is isn't it it's its itself
+    just least less let's like long made make many me more most mustn't my
+    myself never new no nor not now of off old on once one only or other
+    ought our ours ourselves out over own put said same say says second
+    see seen shan't she she'd she'll she's should shouldn't since so some
+    still such take than that that's the their theirs them themselves then
+    there there's these they they'd they'll they're they've this those
+    three through to too two under until up very was wasn't way we we'd
+    we'll we're we've well were weren't what what's when when's where
+    where's whether which while who who's whom why why's with won't would
+    wouldn't you you'd you'll you're you've your yours yourself
+    yourselves""".strip().split())
+
+russian_stopwords = set(
+    u"""
+    и в во не что он на я с со как а то все она так его но да ты к у же
+    вы за бы по только ее мне было вот от меня еще нет о из ему теперь
+    когда даже ну вдруг ли если уже или ни быть был него до вас нибудь
+    опять уж вам сказал ведь там потом себя ничего ей может они тут где
+    есть надо ней для мы тебя их чем была сам чтоб без будто человек
+    чего раз тоже себе под жизнь будет ж тогда кто этот говорил того
+    потому этого какой совсем ним здесь этом один почти мой тем чтобы
+    нее кажется сейчас были куда зачем сказать всех никогда сегодня
+    можно при наконец два об другой хоть после над больше тот через эти
+    нас про всего них какая много разве сказала три эту моя впрочем
+    хорошо свою этой перед иногда лучше чуть том нельзя такой им более
+    всегда конечно всю между""".strip().split())
 
 unicode_punctuation_chars = (
     u"\u0021\u0022\u0023\u0025\u0026\u0027\u0028\u0029\u002a\u002c\u002d"

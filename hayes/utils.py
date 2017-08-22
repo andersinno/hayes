@@ -15,10 +15,16 @@ def object_to_dict(obj, keys=None):
     else:
         src = vars(obj)
 
+    def allowed_key_and_value(k, v):
+        k_in_keys = (not keys or k in keys)
+        k_not_internal = (not k.startswith("__"))
+        v_not_callable = (not callable(v))
+        return k_in_keys and k_not_internal and v_not_callable
+
     return dict(
         (k, v)
         for (k, v) in src.items()
-        if ((not keys or k in keys) and not k.startswith("__") and not callable(v))
+        if allowed_key_and_value(k, v)
     )
 
 

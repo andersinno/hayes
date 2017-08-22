@@ -33,7 +33,8 @@ class _CompoundFilter(Filter):
         self.filters = filters
 
     def as_dict(self):
-        return {self._kind: {"filters": [object_to_dict(f) for f in self.filters]}}
+        return {self._kind: {"filters": [
+            object_to_dict(f) for f in self.filters]}}
 
 
 class AndFilter(_CompoundFilter):

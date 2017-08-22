@@ -9,7 +9,8 @@ from hayes.utils import object_to_dict
 
 
 class Search(object):
-    def __init__(self, query, filter=None, fields=None, sort=None, highlight=None):
+    def __init__(self, query, filter=None, fields=None,
+                 sort=None, highlight=None):
         # XXX: facets?
         if isinstance(query, string_types):
             query = QueryStringQuery(query)
@@ -37,7 +38,8 @@ class Search(object):
 
         if self.highlight:
             if isinstance(self.highlight, (tuple, list, set)):
-                highlight = HighlightSpec(fields=dict((field, HighlightFieldSpec()) for field in self.highlight))
+                highlight = HighlightSpec(fields=dict(
+                    (field, HighlightFieldSpec()) for field in self.highlight))
             else:
                 highlight = self.highlight
             res["highlight"] = object_to_dict(highlight)

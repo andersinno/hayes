@@ -3,7 +3,8 @@ from hayes.utils import object_to_dict
 
 
 class _HighlightBaseSpec(object):
-    def __init__(self, tag_schema=None, pre_tags=None, post_tags=None, number_of_fragments=None, fragment_size=None,
+    def __init__(self, tag_schema=None, pre_tags=None, post_tags=None,
+                 number_of_fragments=None, fragment_size=None,
                  order=None):
         self.tag_schema = tag_schema
         self.pre_tags = pre_tags
@@ -40,5 +41,6 @@ class HighlightSpec(_HighlightBaseSpec):
 
     def to_dict(self):
         out = super(HighlightSpec, self).to_dict()
-        out["fields"] = dict((name, object_to_dict(spec)) for (name, spec) in self.fields.items())
+        out["fields"] = dict((name, object_to_dict(spec))
+                             for (name, spec) in self.fields.items())
         return out

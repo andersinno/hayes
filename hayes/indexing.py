@@ -20,9 +20,11 @@ class DocumentIndex(object):
         mapping_json = {}
         mapping_json["_source"] = {"enabled": self.enable_source}
         if self.enable_size:
-            mapping_json["_size"] = {"enabled": True, "store": True, "type": "int"}
+            mapping_json["_size"] = {
+                "enabled": True, "store": True, "type": "int"}
         if self.enable_size:
-            mapping_json["_timestamp"] = {"enabled": True, "store": True, "type": "date"}
+            mapping_json["_timestamp"] = {
+                "enabled": True, "store": True, "type": "date"}
 
         properties = mapping_json["properties"] = {}
 
@@ -45,7 +47,9 @@ class DocumentIndex(object):
                     if analyzer and isinstance(analyzer, AnalysisBase):
                         analyzers_by_name[analyzer.name] = analyzer
                         filters_by_name.update(
-                            (f.name, f) for f in getattr(analyzer, "filters", ()) if hasattr(f, "name"))
+                            (f.name, f)
+                            for f in getattr(analyzer, "filters", ())
+                            if hasattr(f, "name"))
                         tokenizer = getattr(analyzer, "tokenizer", None)
                         if getattr(tokenizer, "name", None):
                             tokenizers_by_name[tokenizer.name] = tokenizer
@@ -92,8 +96,12 @@ class StringField(SearchField):
         self.boost = boost
 
     def as_dict(self):
-        return {"type": "string", "index": ("not_analyzed" if self.indexed else "none"), "store": self.stored,
-                "boost": self.boost}
+        return {
+            "type": "string",
+            "index": ("not_analyzed" if self.indexed else "none"),
+            "store": self.stored,
+            "boost": self.boost
+        }
 
 
 class TextField(StringField):
@@ -101,7 +109,9 @@ class TextField(StringField):
         super(TextField, self).__init__(boost=boost)
         self.analyzer = analyzer
         self.term_vector = term_vector
-        if self.term_vector not in ("no", "yes", "with_offsets", "with_positions", "with_positions_offsets"):
+        if self.term_vector not in (
+                "no", "yes", "with_offsets", "with_positions",
+                "with_positions_offsets"):
             raise ValueError("What a strange 'term_vector' value")
 
     def as_dict(self):
@@ -144,7 +154,8 @@ class BooleanField(SearchField):
 class CompletionSuggestField(SearchField):
     stored = False
 
-    def __init__(self, index_analyzer=builtin_simple_analyzer, search_analyzer=builtin_simple_analyzer, payloads=False,
+    def __init__(self, index_analyzer=builtin_simple_analyzer,
+                 search_analyzer=builtin_simple_analyzer, payloads=False,
                  preserve_separators=True):
         self.index_analyzer = index_analyzer
         self.search_analyzer = search_analyzer

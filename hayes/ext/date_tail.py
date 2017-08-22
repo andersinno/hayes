@@ -4,9 +4,11 @@ import datetime
 from hayes.search.queries import RangeQuery
 
 
-def generate_date_tail_boost_queries(field, timedeltas_and_boosts, relative_to=None):
+def generate_date_tail_boost_queries(
+        field, timedeltas_and_boosts, relative_to=None):
     """
-    Generate a list of RangeQueries usable to boost the scores of more recent documents.
+    Generate a list of RangeQueries usable to boost the scores of more
+    recent documents.
 
     Example:
 
@@ -20,7 +22,8 @@ def generate_date_tail_boost_queries(field, timedeltas_and_boosts, relative_to=N
     # ...
     ```
 
-    Refs: http://elasticsearch-users.115913.n3.nabble.com/Boost-recent-documents-td2126107.html#a2126317
+    Refs:
+    http://elasticsearch-users.115913.n3.nabble.com/Boost-recent-documents-td2126107.html#a2126317
 
     :param field: field name to generate the queries against
     :param timedeltas_and_boosts:

@@ -21,8 +21,10 @@ def default_tokenizer(content):
 def smart_tokenizer(content, stopwords=()):
     words = text_type(content).split()
     words = [word.strip(unicode_punctuation_chars) for word in words]
-    words = [word for word in words if len(word) > 3 and word.lower() not in stopwords]
-    words = [word for word in words if not word.isdigit()]  # Filter out full numbers
+    words = [word for word in words if len(
+        word) > 3 and word.lower() not in stopwords]
+    # Filter out full numbers
+    words = [word for word in words if not word.isdigit()]
     return words
 
 
@@ -49,7 +51,8 @@ class WordGatherer(object):
         """
         self.connection = connection
         self.target_type = target_type
-        self.target_coll_name = (coll_name or self.connection.default_coll_name)
+        self.target_coll_name = (
+            coll_name or self.connection.default_coll_name)
         self.index = index = DocumentIndex()
         index.name = self.target_type
         index.fields = {
@@ -60,11 +63,13 @@ class WordGatherer(object):
     def reset(self):
         """ Reset target collection (rebuild index).
         """
-        self.connection.rebuild_index(self.index, coll_name=self.target_coll_name)
+        self.connection.rebuild_index(
+            self.index, coll_name=self.target_coll_name)
 
     def _tokenize_documents(self, index, fields, tokenizer=default_tokenizer):
         search = Search(MatchAllQuery())
-        for doc in self.connection.search_iter(search, indexes=[index], count=200):
+        for doc in self.connection.search_iter(
+                search, indexes=[index], count=200):
             for field in fields:
                 value = doc.get(field)
                 if not value:
@@ -74,7 +79,8 @@ class WordGatherer(object):
 
     def _gather_words(self, index, fields, tokenizer=default_tokenizer):
         word_counts = Counter()
-        for doc, words in self._tokenize_documents(index, fields, tokenizer=tokenizer):
+        for doc, words in self._tokenize_documents(
+                index, fields, tokenizer=tokenizer):
             if words:
                 for word in words:
                     word_counts[word] += 1
@@ -89,8 +95,10 @@ class WordGatherer(object):
         :param cutoff: Ignore words with less than this many occurrences.
         """
         counts_by_uid = defaultdict(lambda: Counter())
-        for word, count in self._gather_words(index, fields, tokenizer=tokenizer).items():
-            uid = hashlib.sha1(unicodedata.normalize("NFKD", word.lower()).encode("UTF-8")).hexdigest()
+        for word, count in self._gather_words(
+                index, fields, tokenizer=tokenizer).items():
+            uid = hashlib.sha1(unicodedata.normalize(
+                "NFKD", word.lower()).encode("UTF-8")).hexdigest()
             counts_by_uid[uid][word] += count
 
         for uid, word_to_count in counts_by_uid.items():
@@ -98,11 +106,14 @@ class WordGatherer(object):
             count = sum(word_to_count.values())
             if count <= cutoff:
                 continue
-            self.connection.session.post("/%s/%s/%s/_update" % (self.target_coll_name, self.target_type, uid), data={
-                "script": "ctx._source.count += count",
-                "params": {"count": count},
-                "upsert": {"word": word, "count": count}
-            })
+            self.connection.session.post(
+                "/%s/%s/%s/_update" % (self.target_coll_name,
+                                       self.target_type, uid),
+                data={
+                    "script": "ctx._source.count += count",
+                    "params": {"count": count},
+                    "upsert": {"word": word, "count": count}
+                })
 
     def search(self, word, limit=30):
         """
@@ -111,5 +122,6 @@ class WordGatherer(object):
         :param limit: Maximum number of results to return.
         """
         search = Search(PrefixQuery("word", word), sort={"count": "desc"})
-        for doc in self.connection.search(search, indexes=[self.index], count=limit):
+        for doc in self.connection.search(
+                search, indexes=[self.index], count=limit):
             yield (doc["word"], doc["count"])

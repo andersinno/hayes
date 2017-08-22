@@ -23,8 +23,10 @@ class DjangoElasticSearchModel(ElasticSearchModel):
 class DjangoResultSet(ResultSet):
     def get_objects(self, queryset=None):
         """
-        Return an iterator of Django model objects in Elasticsearch order, optionally using the given Django queryset.
-        If no queryset is given, a default queryset (Model.objects.all) is used.
+        Return an iterator of Django model objects in Elasticsearch order,
+        optionally using the given Django queryset.  If no queryset is
+        given, a default queryset (Model.objects.all) is used.
+
         :param queryset: Optional queryset to filter in.
         :return:
         """
@@ -34,8 +36,10 @@ class DjangoResultSet(ResultSet):
             queryset = self[0].django_model.objects.all()
 
         pks = [res.pk for res in self if res.django_model == queryset.model]
-        object_map = dict((text_type(obj.pk), obj) for obj in queryset.filter(pk__in=pks))
-        result_map = dict((res.pk, res) for res in self if res.pk in object_map)
+        object_map = dict((text_type(obj.pk), obj)
+                          for obj in queryset.filter(pk__in=pks))
+        result_map = dict((res.pk, res)
+                          for res in self if res.pk in object_map)
 
         for pk in pks:
             obj = object_map.get(pk)

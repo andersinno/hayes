@@ -32,7 +32,8 @@ class CustomAnalyzer(AnalysisBase):
 
     def to_dict(self, **extra):
         filters = [text_type(getattr(f, "name", f)) for f in self.filters]
-        return super(CustomAnalyzer, self).to_dict(tokenizer=self.tokenizer, filter=filters)
+        return super(CustomAnalyzer, self).to_dict(
+            tokenizer=self.tokenizer, filter=filters)
 
 
 class StandardAnalyzer(AnalysisBase):
@@ -74,9 +75,10 @@ class LanguageAnalyzer(AnalysisBase):
 class SnowballAnalyzer(AnalysisBase):
     type = "snowball"
     KNOWN_LANGUAGES = (
-        "Armenian", "Basque", "Catalan", "Danish", "Dutch", "English", "Finnish", "French", "German", "German2",
-        "Hungarian", "Italian", "Kp", "Lovins", "Norwegian", "Porter", "Portuguese", "Romanian", "Russian", "Spanish",
-        "Swedish", "Turkish"
+        "Armenian", "Basque", "Catalan", "Danish", "Dutch", "English",
+        "Finnish", "French", "German", "German2", "Hungarian",
+        "Italian", "Kp", "Lovins", "Norwegian", "Porter", "Portuguese",
+        "Romanian", "Russian", "Spanish", "Swedish", "Turkish",
     )
 
     def __init__(self, name, language="English"):
@@ -86,7 +88,8 @@ class SnowballAnalyzer(AnalysisBase):
         self.language = language
 
     def to_dict(self, **extra):
-        return super(SnowballAnalyzer, self).to_dict(language=self.language, **extra)
+        return super(SnowballAnalyzer, self).to_dict(
+            language=self.language, **extra)
 
 
 class NgramTokenizer(AnalysisBase):
@@ -118,7 +121,8 @@ class StopFilter(AnalysisBase):
         self.stopwords = stopwords
 
     def to_dict(self, **extra):
-        return super(StopFilter, self).to_dict(stopwords=self.stopwords, **extra)
+        return super(StopFilter, self).to_dict(
+            stopwords=self.stopwords, **extra)
 
 
 class StemmerFilter(AnalysisBase):
@@ -129,7 +133,8 @@ class StemmerFilter(AnalysisBase):
         self.stemmer_name = stemmer_name
 
     def to_dict(self, **extra):
-        return super(StemmerFilter, self).to_dict(name=self.stemmer_name, **extra)
+        return super(StemmerFilter, self).to_dict(
+            name=self.stemmer_name, **extra)
 
 
 ###

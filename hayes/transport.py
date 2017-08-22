@@ -58,5 +58,6 @@ class ESSession(requests.Session):
         for command, payload in data:
             batch.append(command)
             batch.append(payload)
-        data = "\n".join(json.dumps(obj, default=json_encode) for obj in batch) + "\n"
+        data = "\n".join(json.dumps(obj, default=json_encode)
+                         for obj in batch) + "\n"
         return self.request(method, url, data=data, **kwargs)

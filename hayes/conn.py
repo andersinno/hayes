@@ -25,7 +25,8 @@ class Hayes(object):
         self.session = ESSession(base_url=server)
         self.default_coll_name = default_coll_name
 
-    def index_objects(self, index, objects_iterable, bulk_size, coll_name=None):
+    def index_objects(self, index, objects_iterable,
+                      bulk_size, coll_name=None):
         coll_name = coll_name or self.default_coll_name
         if not coll_name:
             raise ValueError("No coll_name given")
@@ -39,9 +40,11 @@ class Hayes(object):
                 obj = object_to_dict(obj, keys=keys)
                 obj_id = obj.pop("_id", None) or obj.pop("id", None)
                 if obj_id is not None:
-                    self.session.put("/%s/%s/%s" % (coll_name, doctype, obj_id), data=obj)
+                    self.session.put("/%s/%s/%s" %
+                                     (coll_name, doctype, obj_id), data=obj)
                 else:
-                    self.session.post("/%s/%s/" % (coll_name, doctype), data=obj)
+                    self.session.post("/%s/%s/" %
+                                      (coll_name, doctype), data=obj)
                 n += 1
         else:
             for obj_batch in batch_iterable(objects_iterable, bulk_size):
@@ -53,7 +56,9 @@ class Hayes(object):
                         batch.append(({"index": {"_id": obj_id}}, obj))
                     else:
                         batch.append(({"index": {}}, obj))
-                resp = self.session.bulk("post", "/%s/%s/_bulk" % (coll_name, doctype), data=batch).json()
+                resp = self.session.bulk(
+                    "post", "/%s/%s/_bulk" % (coll_name, doctype),
+                    data=batch).json()
                 n += len(resp.get("items") or ())
         return n
 
@@ -64,7 +69,8 @@ class Hayes(object):
 
         settings = index.get_settings_fragment()
         try:
-            self.session.put("/%s/" % coll_name, data=settings)  # Create the collection
+            # Create the collection
+            self.session.put("/%s/" % coll_name, data=settings)
         except BadRequestError as exc:
             if "IndexAlreadyExistsException" in exc.message:
                 # Already existed, thus close, update settings, reopen (bleeeh)
@@ -80,7 +86,8 @@ class Hayes(object):
                 self.log.info("Mapping %s deleted." % doctype)
             except NotFoundError:
                 pass
-        self.session.put("/%s/%s/_mapping" % (coll_name, doctype), data=index.get_mapping())
+        self.session.put("/%s/%s/_mapping" %
+                         (coll_name, doctype), data=index.get_mapping())
 
     def completion_suggest(self, index, text, fuzzy=None, coll_name=None):
         coll_name = coll_name or self.default_coll_name
@@ -96,24 +103,29 @@ class Hayes(object):
             ][0]
         except IndexError:
             raise ValueError("Index doesn't have a CompletionSuggestField")
-        sugg_doc = {"text": text, "completion": {"field": completion_suggest_field_name}}
+        sugg_doc = {"text": text, "completion": {
+            "field": completion_suggest_field_name}}
         if fuzzy:
             sugg_doc["completion"]["fuzzy"] = {"unicode_aware": True}
 
-        data = self.session.post("/%s/_suggest" % coll_name, data={key: sugg_doc}).json()
+        data = self.session.post("/%s/_suggest" %
+                                 coll_name, data={key: sugg_doc}).json()
         return CompletionSuggestionResults(index, data[key][0])
 
-    def search(self, search, indexes=None, count=50, start=0, page=None, coll_name=None):
+    def search(self, search, indexes=None, count=50,
+               start=0, page=None, coll_name=None):
         coll_name = coll_name or self.default_coll_name
 
-        if isinstance(search, string_types):  # This is a silly default, I suppose
+        if isinstance(
+                search, string_types):  # This is a silly default, I suppose
             search = Search(QueryStringQuery(search))
         if isinstance(search, Query):
             search = Search(query=search)
 
         search_obj = object_to_dict(search)
         if indexes:
-            url = "/%s/%s/_search" % (coll_name, ",".join(i.name for i in indexes))
+            url = "/%s/%s/_search" % (coll_name,
+                                      ",".join(i.name for i in indexes))
         else:
             url = "/%s/_search" % coll_name
 
@@ -123,11 +135,14 @@ class Hayes(object):
             search_obj["from"] = search_obj["size"] * page
 
         data = self.session.get(url, data=search_obj).json()
-        return SearchResults(search=search, raw_result=data, start=start, count=count)
+        return SearchResults(search=search, raw_result=data,
+                             start=start, count=count)
 
-    def search_iter(self, search, indexes=None, count=50, start=0, coll_name=None):
+    def search_iter(self, search, indexes=None,
+                    count=50, start=0, coll_name=None):
         while True:
-            res = self.search(search=search, indexes=indexes, count=count, start=start, coll_name=coll_name)
+            res = self.search(search=search, indexes=indexes,
+                              count=count, start=start, coll_name=coll_name)
             if not res.hits:
                 break
             for hit in res.hits:

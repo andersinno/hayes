@@ -5,7 +5,8 @@ class _Ranges(object):
     def __init__(self):
         self.ranges = {}
 
-    def add_range(self, field, gte=None, gt=None, lte=None, lt=None, boost=1.0):
+    def add_range(self, field, gte=None, gt=None,
+                  lte=None, lt=None, boost=1.0):
         out = {}
         if gte:
             out["gte"] = gte

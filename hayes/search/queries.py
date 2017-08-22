@@ -56,7 +56,8 @@ class MatchQuery(Query):
 
 
 class BoolQuery(Query):
-    def __init__(self, must=None, must_not=None, should=None, boost=None, minimum_should_match=None):
+    def __init__(self, must=None, must_not=None, should=None,
+                 boost=None, minimum_should_match=None):
         self.must = must
         self.must_not = must_not
         self.should = should
@@ -65,9 +66,12 @@ class BoolQuery(Query):
 
     def as_dict(self):
         out = {
-            "must": [object_to_dict(d) for d in self.must] if self.must else None,
-            "must_not": [object_to_dict(d) for d in self.must_not] if self.must_not else None,
-            "should": [object_to_dict(d) for d in self.should] if self.should else None,
+            "must": ([object_to_dict(d) for d in self.must]
+                     if self.must else None),
+            "must_not": ([object_to_dict(d) for d in self.must_not]
+                         if self.must_not else None),
+            "should": ([object_to_dict(d) for d in self.should]
+                       if self.should else None),
             "boost": self.boost,
             "minimum_should_match": self.minimum_should_match
         }
@@ -121,8 +125,14 @@ class PrefixQuery(Query):
         self.boost = boost
 
     def as_dict(self):
-        return _clean_dict(
-            {"prefix": {self.field: {"value": self.value, "boost": float(self.boost) if self.boost else None}}})
+        return _clean_dict({
+            "prefix": {
+                self.field: {
+                    "value": self.value,
+                    "boost": float(self.boost) if self.boost else None
+                }
+            }
+        })
 
 
 class TermQuery(Query):
@@ -132,7 +142,14 @@ class TermQuery(Query):
         self.boost = boost
 
     def as_dict(self):
-        return _clean_dict({"term": {self.field: {"value": text_type(self.value), "boost": self.boost}}})
+        return _clean_dict({
+            "term": {
+                self.field: {
+                    "value": text_type(self.value),
+                    "boost": self.boost
+                }
+            }
+        })
 
 
 class WildcardQuery(Query):
@@ -142,11 +159,19 @@ class WildcardQuery(Query):
         self.boost = boost
 
     def as_dict(self):
-        return _clean_dict({"wildcard": {self.field: {"value": text_type(self.value), "boost": self.boost}}})
+        return _clean_dict({
+            "wildcard": {
+                self.field: {
+                    "value": text_type(self.value),
+                    "boost": self.boost
+                }
+            }
+        })
 
 
 class FuzzyQuery(Query):
-    def __init__(self, field, value, boost=None, fuzziness=2, prefix_length=0, max_expansions=100):
+    def __init__(self, field, value, boost=None, fuzziness=2,
+                 prefix_length=0, max_expansions=100):
         self.field = field
         self.value = value
         self.boost = boost
