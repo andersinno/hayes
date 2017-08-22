@@ -4,6 +4,7 @@
 *.py[cod]
 *.so
 *.sqlite3
+/.eggs
 .coverage
 .idea
 .installed.cfg
