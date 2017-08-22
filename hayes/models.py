@@ -30,7 +30,7 @@ class DjangoResultSet(ResultSet):
         :param queryset: Optional queryset to filter in.
         :return:
         """
-        if not len(self):
+        if not self:
             return
         if not queryset:
             queryset = self[0].django_model.objects.all()

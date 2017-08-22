@@ -41,12 +41,12 @@ def generate_date_tail_boost_queries(
     times = sorted(times.items(), key=lambda i: i[0])
     queries = []
 
-    for x in range(len(times)):
-        kwargs = {"field": field, "boost": times[x][1]}
+    for (x, time) in enumerate(times):
+        kwargs = {"field": field, "boost": time[1]}
         if x == 0:
-            kwargs["lte"] = times[x][0]
+            kwargs["lte"] = time[0]
         else:
-            kwargs["gt"] = times[x][0]
+            kwargs["gt"] = time[0]
             if x < len(times) - 1:
                 kwargs["lte"] = times[x + 1][0]
 

@@ -83,7 +83,7 @@ class Hayes(object):
         if delete_first:
             try:
                 self.session.delete("/%s/%s" % (coll_name, doctype))
-                self.log.info("Mapping %s deleted." % doctype)
+                self.log.info("Mapping %s deleted.", doctype)
             except NotFoundError:
                 pass
         self.session.put("/%s/%s/_mapping" %

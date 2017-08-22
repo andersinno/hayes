@@ -79,7 +79,7 @@ class WordGatherer(object):
 
     def _gather_words(self, index, fields, tokenizer=default_tokenizer):
         word_counts = Counter()
-        for doc, words in self._tokenize_documents(
+        for _doc, words in self._tokenize_documents(
                 index, fields, tokenizer=tokenizer):
             if words:
                 for word in words:
@@ -94,7 +94,7 @@ class WordGatherer(object):
         :param tokenizer: Tokenizer callable. Should split unicode to words
         :param cutoff: Ignore words with less than this many occurrences.
         """
-        counts_by_uid = defaultdict(lambda: Counter())
+        counts_by_uid = defaultdict(Counter)
         for word, count in self._gather_words(
                 index, fields, tokenizer=tokenizer).items():
             uid = hashlib.sha1(unicodedata.normalize(

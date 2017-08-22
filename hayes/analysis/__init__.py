@@ -18,7 +18,7 @@ class AnalysisBase(object):
 
 
 class BuiltInAnalyzer(AnalysisBase):
-    def to_dict(self):
+    def to_dict(self, **extra):
         return None
 
 

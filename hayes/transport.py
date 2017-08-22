@@ -7,13 +7,13 @@ import requests
 from requests.exceptions import HTTPError
 
 
-def json_encode(object):
-    if isinstance(object, datetime.datetime):
-        return object.isoformat()
-    elif isinstance(object, datetime.date):
-        return object.isoformat()
+def json_encode(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    elif isinstance(obj, datetime.date):
+        return obj.isoformat()
     else:
-        raise ValueError("Can't encode %r" % object)
+        raise ValueError("Can't encode %r" % (obj,))
 
 
 class NotFoundError(HTTPError):

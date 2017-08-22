@@ -59,7 +59,7 @@ class SearchResult(dict):
 
     def get_highlights(self):
         out = []
-        for field, highlights in sorted(self.get("highlight", {}).items()):
+        for _field, highlights in sorted(self.get("highlight", {}).items()):
             out.extend(highlights)
         return out
 
