@@ -1,4 +1,4 @@
-# -- encoding: UTF-8 --
+# -*- coding: utf-8 -*-
 
 
 def object_to_dict(obj, keys=None):

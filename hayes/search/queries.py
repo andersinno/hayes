@@ -1,4 +1,4 @@
-# -- encoding: UTF-8 --
+# -*- coding: utf-8 -*-
 from six import iteritems, text_type
 
 from hayes.search.filters import AndFilter

@@ -1,4 +1,4 @@
-# -- encoding: UTF-8 --
+# -*- coding: utf-8 -*-
 
 from six import text_type
 

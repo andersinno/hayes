@@ -1,4 +1,4 @@
-# -- encoding: UTF-8 --
+# -*- coding: utf-8 -*-
 from django.core.management import BaseCommand
 
 from hayes.django_interop import get_configured_indexes, get_connection

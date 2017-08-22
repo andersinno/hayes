@@ -1,4 +1,4 @@
-# -- encoding: UTF-8 --
+# -*- coding: utf-8 -*-
 from hayes.analysis import AnalysisBase, builtin_simple_analyzer
 from hayes.utils import object_to_dict
 

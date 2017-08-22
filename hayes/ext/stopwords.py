@@ -1,4 +1,4 @@
-# -- encoding: UTF-8 --
+# -*- coding: utf-8 -*-
 
 finnish_stopwords = set((u"aiemmin", u"aika", u"aikaa", u"aikaan", u"aikaisemmin", u"aikaisin", u"aikajen", u"aikana",
                          u"aikoina", u"aikoo", u"aikovat", u"aina", u"ainakaan", u"ainakin", u"ainoa", u"ainoat",
