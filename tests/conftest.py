@@ -2,7 +2,8 @@
 import pytest
 
 from hayes import Hayes
-from hayes_tests.utils import MockSession
+
+from .utils import MockSession
 
 
 @pytest.fixture
