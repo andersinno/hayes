@@ -27,11 +27,11 @@ class Command(BaseCommand):
             if Page.objects.filter(url=entry["url"]).exists():
                 continue
             Page.objects.create(**entry)
-            print "Created: %r" % entry["url"]
+            print("Created: %r" % entry["url"])
 
     def parse_xml(self, filename):
         from lxml import etree
-        with file(filename, "rb") as fp:
+        with open(filename, "rb") as fp:
             for event, element in etree.iterparse(fp):
                 if event == "end" and element.tag == "doc":
                     try:

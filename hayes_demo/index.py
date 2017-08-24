@@ -45,7 +45,7 @@ class PeopleIndex(DocumentIndex):
         }
 
     def get_objects(self):
-        for id in xrange(50):
+        for id in range(50):
             object = Person(locale=self.locale, id=id)
             yield dict(object)
 

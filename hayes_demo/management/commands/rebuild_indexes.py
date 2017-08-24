@@ -8,6 +8,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         conn = get_connection()
         for index in get_configured_indexes():
-            print "Working on index", index.name
+            print("Working on index {}".format(index.name))
             conn.rebuild_index(index)
             conn.index_objects(index, index.get_objects(), bulk_size=300)

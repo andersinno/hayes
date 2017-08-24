@@ -14,4 +14,4 @@ class Command(BaseCommand):
         wg.update(index, ("abstract", "title"),
                   tokenizer=smart_finnish_tokenizer)
         for x in wg.search("juna"):
-            print x
+            print(x)
