@@ -1,0 +1,23 @@
+sudo: false
+language: python
+
+matrix:
+  include:
+    - {env: TOXENV=style, python: "3.4"}
+    - python: "2.7"
+    - python: "3.4"
+    - python: "3.5"
+    - python: "3.6"
+
+install:
+  - pip install -U pip setuptools
+  - pip install codecov
+  - pip install tox-travis
+  - python setup.py bdist_wheel
+
+cache: pip
+
+script: tox -v --installpkg dist/*.whl
+
+after_success:
+  - codecov -e TRAVIS_PYTHON_VERSION
