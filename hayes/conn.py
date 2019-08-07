@@ -72,7 +72,7 @@ class Hayes(object):
             # Create the collection
             self.session.put("/%s/" % coll_name, data=settings)
         except BadRequestError as exc:
-            if "IndexAlreadyExistsException" in exc.message:
+            if "IndexAlreadyExistsException" in str(exc):
                 # Already existed, thus close, update settings, reopen (bleeeh)
                 self.session.post("/%s/_close" % coll_name)
                 self.session.put("/%s/_settings" % coll_name, data=settings)
