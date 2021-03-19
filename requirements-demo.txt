@@ -5,5 +5,5 @@
 coffin==0.3.8
 django==1.6.11
 fake-factory==0.3.2
-jinja2==2.6
+jinja2==2.11.3
 lxml==3.8.0
