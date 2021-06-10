@@ -3,7 +3,7 @@
 #   prequ update
 #
 coffin==0.3.8
-django==1.6.11
+django==2.2.24
 fake-factory==0.3.2
 jinja2==2.6
 lxml==3.8.0
